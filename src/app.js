@@ -70,10 +70,11 @@ mist_snmp = new Agent(global.CONFIG.SNMP_COMMUNITY, global.SNMP_SERVER_IP, globa
 /*================================================================
  CRON
  ================================================================*/
-//setTimeout(() => {
-sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID)
-    // }, 1000)
+setTimeout(() => {
+    sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, mist_snmp)
+}, 1000)
 
-cron.schedule('* * * * *', () => {
-    console.log('running a task every minute');
-});
+// cron.schedule('* * * * *', () => {
+//     console.log('running a task every minute');
+//     sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, mist_snmp)
+// });

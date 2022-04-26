@@ -28,15 +28,175 @@ mistLab MODULE-IDENTITY
 
     ::= { enterprises 65535 }
 
-mistLabMIB      OBJECT IDENTIFIER ::= { mistLab 1 }
+----------------------------------------------
+-- ORG STRUCTURE
+----------------------------------------------
 
 
---
--- site level structure
---
+
+mistOrg OBJECT IDENTIFIER ::= { mistLab 1 }
+
+orgName OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The Mist Organization Name"
+    ::= { mistOrg 1 }
+
+orgId OBJECT-TYPE
+    SYNTAX OCTET STRING
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The Mist Organization ID"
+    ::= { mistOrg 2 }
+
+orgStats OBJECT IDENTIFIER ::= { mistOrg 3 }
+
+numSites OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of sites belonging to the org"
+    ::= { orgStats 1 }
 
 
-sites   OBJECT IDENTIFIER ::= { mistLabMIB 1 }
+numDevices OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of devices in the org assigned to a site"
+    ::= { orgStats 2 }
+
+numInventory OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of devices in the org inventory"
+    ::= { orgStats 3 }
+
+numDevicesConnected OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of connected devices in the org"
+    ::= { orgStats 4 }
+
+numDevicesDisconnected OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of disconnected devices in the org"
+    ::= { orgStats 5 }
+
+sleCoverageTotal OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Total number of user minutes used to calculate the Coverage SLE "
+    ::= { orgStats 6 }
+
+sleCoverageOk OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of user minutes reaching the Coverage SLE threshold"
+    ::= { orgStats 7 }
+
+sleFailedToConnectTotal OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Total number of user minutes used to calculate the FailedToConnect SLE "
+    ::= { orgStats 8 }
+
+sleFailedToConnectOk OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of user minutes reaching the FailedToConnect SLE threshold"
+    ::= { orgStats 9 }
+
+-- sleRoamingTotal OBJECT-TYPE
+--     SYNTAX Integer32
+--     MAX-ACCESS read-only
+--     STATUS    current
+--     DESCRIPTION
+--         "Total number of user minutes used to calculate the Roaming SLE "
+--     ::= { orgStats 10 }
+-- 
+-- sleRoamingOk OBJECT-TYPE
+--     SYNTAX Integer32
+--     MAX-ACCESS read-only
+--     STATUS    current
+--     DESCRIPTION
+--         "Number of user minutes reaching the Roaming SLE threshold"
+--     ::= { orgStats 11 }
+
+sleTimeToConnectTotal OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Total number of user minutes used to calculate the TimeToConnect SLE "
+    ::= { orgStats 12 }
+
+sleTimeToConnectOk OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of user minutes reaching the TimeToConnect SLE threshold"
+    ::= { orgStats 13 }
+
+sleThroughputTotal OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Total number of user minutes used to calculate the Throughput SLE "
+    ::= { orgStats 14 }
+
+sleThroughputOk OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of user minutes reaching the Throughput SLE threshold"
+    ::= { orgStats 15 }
+
+sleCapacityTotal OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Total number of user minutes used to calculate the Capacity SLE "
+    ::= { orgStats 16 }
+
+sleCapacityOk OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of user minutes reaching the Capacity SLE threshold"
+    ::= { orgStats 17 }
+
+----------------------------------------------
+-- SITE STRUCTURE
+----------------------------------------------
+
+
+sites   OBJECT IDENTIFIER ::= { mistLab 2 }
 
 siteTable OBJECT-TYPE
     SYNTAX SEQUENCE OF SiteEntry
@@ -58,8 +218,19 @@ siteEntry    OBJECT-TYPE
 
 SiteEntry    ::= SEQUENCE {
     siteIndex           Integer32,
-    siteId          OCTET STRING,
-    siteName            OCTET STRING
+    siteId              OCTET STRING,
+    siteName            OCTET STRING,
+    siteCountry         OCTET STRING,
+    siteAddress         OCTET STRING,
+    apCount             OCTET STRING,
+    apConnected         OCTET STRING,
+    switchCount         OCTET STRING,
+    switchConnected     OCTET STRING,
+    gatewayCount        OCTET STRING,
+    gatewayConnected    OCTET STRING,
+    devicesCount        OCTET STRING,
+    clientsCount        OCTET STRING,
+    clientsConnected    OCTET STRING,
 }
 
 siteIndex OBJECT-TYPE
@@ -70,7 +241,7 @@ siteIndex OBJECT-TYPE
         "The site index in the snmp table"
     ::= { siteEntry 1 }
 
-siteMistId  OBJECT-TYPE
+siteId  OBJECT-TYPE
     SYNTAX  OCTET STRING
     MAX-ACCESS read-only
     STATUS    current
@@ -86,20 +257,92 @@ siteName  OBJECT-TYPE
         "The Mist Site Name"
     ::= { siteEntry 3 }
 
+siteCountry  OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The Mist Site Name"
+    ::= { siteEntry 4 }
 
---
--- AP level structure
---
-aps   OBJECT IDENTIFIER ::= { siteIndex 4 }
+siteAddress  OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The Mist Site Name"
+    ::= { siteEntry 5 }
 
---
--- Access Points description
---
-stats          OBJECT IDENTIFIER ::= { aps 1 }
+apCount OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 6 }
 
---
--- Access Points Status description
---
+apConnected OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 7 }
+
+switchCount OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 8 }
+
+switchConnected OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 9 }
+
+gatewayCount OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 10 }
+
+gatewayConnected OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 11 }
+
+devicesCount OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 12 }
+
+clientsCount OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 13 }
+
+clientsConnected OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { siteEntry 14 }
+
+
+
+----------------------------------------------
+-- AP STRUCTURE
+----------------------------------------------
+ap   OBJECT IDENTIFIER ::= { mistLab 3 }
+
 apStatsTable    OBJECT-TYPE
     SYNTAX SEQUENCE OF AccessPointStatsEntry
     MAX-ACCESS not-accessible
@@ -107,7 +350,7 @@ apStatsTable    OBJECT-TYPE
     DESCRIPTION
         "This is the data structure associated to
         mist access points status table"
-    ::= { stats 1 }
+    ::= { ap 1 }
 
 apStatsEntry    OBJECT-TYPE
     SYNTAX    AccessPointStatsEntry
@@ -207,7 +450,7 @@ apSerial  OBJECT-TYPE
     DESCRIPTION
         "Access Point Serial Number"
     ::= { apStatsEntry 9 }
-      
+
 apIp  OBJECT-TYPE
     SYNTAX  IpAddress
     MAX-ACCESS read-only

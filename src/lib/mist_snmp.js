@@ -77,8 +77,8 @@ class Agent {
     }
 
     add_ap_stats(site_index, ap) {
-        var status = 0;
-        if (ap.status == "connected") status = 1;
+        var status = 1;
+        if (ap.status == "connected") status = 2;
         var name = ap.mac;
         if (ap.name) name = ap.name;
         this.mib.addTableRow('apStatsEntry', [site_index, ap.index, ap.mac, name, status, ap.last_seen, ap.uptime, ap.model, ap.hw_rev, ap.serial, ap.ip, ap.ext_ip, ap.num_clients]);

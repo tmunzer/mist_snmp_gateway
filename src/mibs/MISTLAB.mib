@@ -2,8 +2,10 @@ MISTLAB-MIB DEFINITIONS ::= BEGIN
 IMPORTS
     Integer32, IpAddress, MODULE-IDENTITY, OBJECT-TYPE, enterprises 
         FROM SNMPv2-SMI
-    DateAndTime, DisplayString
+    DisplayString
         FROM SNMPv2-TC
+    OBJECT-GROUP
+        FROM SNMPv2-CONF
 ;
 --
 -- Main Descritpion
@@ -28,13 +30,41 @@ mistLab MODULE-IDENTITY
 
     ::= { enterprises 65535 }
 
-----------------------------------------------
+--
 -- ORG STRUCTURE
-----------------------------------------------
+--
 
 
 
-mistOrg OBJECT IDENTIFIER ::= { mistLab 1 }
+organization OBJECT IDENTIFIER ::= { mistLab 1 }
+
+orgGroup OBJECT-GROUP
+    OBJECTS { 
+        orgName,
+        orgId,
+        numSites,
+        numDevices,
+        numInventory,
+        numDevicesConnected,
+        numDevicesDisconnected,
+        sleCoverageTotal,
+        sleCoverageOk,
+        sleFailedToConnectTotal,
+        sleFailedToConnectOk,
+        sleRoamingTotal,
+        sleRoamingOk,
+        sleTimeToConnectTotal,
+        sleTimeToConnectOk,
+        sleThroughputTotal,
+        sleThroughputOk,
+        sleCapacityTotal,
+        sleCapacityOk
+    }
+    STATUS  current
+    DESCRIPTION
+            "A collection of objects providing basic instrumentation and
+            control of an SNMPv2 entity."
+    ::= { organization 4 }
 
 orgName OBJECT-TYPE
     SYNTAX OCTET STRING
@@ -42,7 +72,7 @@ orgName OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "The Mist Organization Name"
-    ::= { mistOrg 1 }
+    ::= { organization 1 }
 
 orgId OBJECT-TYPE
     SYNTAX OCTET STRING
@@ -50,9 +80,9 @@ orgId OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "The Mist Organization ID"
-    ::= { mistOrg 2 }
+    ::= { organization 2 }
 
-orgStats OBJECT IDENTIFIER ::= { mistOrg 3 }
+orgStats OBJECT IDENTIFIER ::= { organization 3 }
 
 numSites OBJECT-TYPE
     SYNTAX Integer32
@@ -127,21 +157,21 @@ sleFailedToConnectOk OBJECT-TYPE
         "Number of user minutes reaching the FailedToConnect SLE threshold"
     ::= { orgStats 9 }
 
--- sleRoamingTotal OBJECT-TYPE
---     SYNTAX Integer32
---     MAX-ACCESS read-only
---     STATUS    current
---     DESCRIPTION
---         "Total number of user minutes used to calculate the Roaming SLE "
---     ::= { orgStats 10 }
--- 
--- sleRoamingOk OBJECT-TYPE
---     SYNTAX Integer32
---     MAX-ACCESS read-only
---     STATUS    current
---     DESCRIPTION
---         "Number of user minutes reaching the Roaming SLE threshold"
---     ::= { orgStats 11 }
+sleRoamingTotal OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Total number of user minutes used to calculate the Roaming SLE "
+    ::= { orgStats 10 }
+
+sleRoamingOk OBJECT-TYPE
+    SYNTAX Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of user minutes reaching the Roaming SLE threshold"
+    ::= { orgStats 11 }
 
 sleTimeToConnectTotal OBJECT-TYPE
     SYNTAX Integer32
@@ -191,12 +221,34 @@ sleCapacityOk OBJECT-TYPE
         "Number of user minutes reaching the Capacity SLE threshold"
     ::= { orgStats 17 }
 
-----------------------------------------------
+--
 -- SITE STRUCTURE
-----------------------------------------------
+--
 
 
 sites   OBJECT IDENTIFIER ::= { mistLab 2 }
+
+siteStatsGroup OBJECT-GROUP
+    OBJECTS { 
+        siteId,
+        siteName,
+        siteCountry,
+        siteAddress,
+        apCount,
+        apConnected,
+        switchCount,
+        switchConnected,
+        gatewayCount,
+        gatewayConnected,
+        devicesCount,
+        clientsCount,
+        clientsConnected
+    }
+    STATUS  current
+    DESCRIPTION
+            "A collection of objects providing basic instrumentation and
+            control of an SNMPv2 entity."
+    ::= { sites 2 }
 
 siteTable OBJECT-TYPE
     SYNTAX SEQUENCE OF SiteEntry
@@ -222,15 +274,15 @@ SiteEntry    ::= SEQUENCE {
     siteName            OCTET STRING,
     siteCountry         OCTET STRING,
     siteAddress         OCTET STRING,
-    apCount             OCTET STRING,
-    apConnected         OCTET STRING,
-    switchCount         OCTET STRING,
-    switchConnected     OCTET STRING,
-    gatewayCount        OCTET STRING,
-    gatewayConnected    OCTET STRING,
-    devicesCount        OCTET STRING,
-    clientsCount        OCTET STRING,
-    clientsConnected    OCTET STRING,
+    apCount             Integer32,
+    apConnected         Integer32,
+    switchCount         Integer32,
+    switchConnected     Integer32,
+    gatewayCount        Integer32,
+    gatewayConnected    Integer32,
+    devicesCount        Integer32,
+    clientsCount        Integer32,
+    clientsConnected    Integer32
 }
 
 siteIndex OBJECT-TYPE
@@ -242,7 +294,7 @@ siteIndex OBJECT-TYPE
     ::= { siteEntry 1 }
 
 siteId  OBJECT-TYPE
-    SYNTAX  OCTET STRING
+    SYNTAX  OCTET STRING  (SIZE(1..37))
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
@@ -250,7 +302,7 @@ siteId  OBJECT-TYPE
     ::= { siteEntry 2 }
 
 siteName  OBJECT-TYPE
-    SYNTAX  OCTET STRING
+    SYNTAX  OCTET STRING  (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
@@ -258,7 +310,7 @@ siteName  OBJECT-TYPE
     ::= { siteEntry 3 }
 
 siteCountry  OBJECT-TYPE
-    SYNTAX  OCTET STRING
+    SYNTAX  OCTET STRING  (SIZE(1..2))
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
@@ -266,7 +318,7 @@ siteCountry  OBJECT-TYPE
     ::= { siteEntry 4 }
 
 siteAddress  OBJECT-TYPE
-    SYNTAX  OCTET STRING
+    SYNTAX  OCTET STRING  (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
@@ -338,13 +390,33 @@ clientsConnected OBJECT-TYPE
 
 
 
-----------------------------------------------
+--
 -- AP STRUCTURE
-----------------------------------------------
+--
 ap   OBJECT IDENTIFIER ::= { mistLab 3 }
 
+apStatsGroup OBJECT-GROUP
+    OBJECTS { 
+        apMac,
+        apName,
+        apStatus,
+        apLastSeen,
+        apUptime,
+        apHardware,
+        apHardwareRev,
+        apSerial,
+        apIp,
+        apPublicIp,
+        apClientCount
+    }
+    STATUS  current
+    DESCRIPTION
+            "A collection of objects providing basic instrumentation and
+            control of an SNMPv2 entity."
+    ::= { ap 2 }
+
 apStatsTable    OBJECT-TYPE
-    SYNTAX SEQUENCE OF AccessPointStatsEntry
+    SYNTAX SEQUENCE OF ApStatsEntry
     MAX-ACCESS not-accessible
     STATUS    current
     DESCRIPTION
@@ -353,7 +425,7 @@ apStatsTable    OBJECT-TYPE
     ::= { ap 1 }
 
 apStatsEntry    OBJECT-TYPE
-    SYNTAX    AccessPointStatsEntry
+    SYNTAX    ApStatsEntry
     MAX-ACCESS not-accessible
     STATUS    current
     DESCRIPTION
@@ -362,7 +434,7 @@ apStatsEntry    OBJECT-TYPE
     INDEX  { siteIndex,apIndex }
     ::= { apStatsTable 1 }
 
-AccessPointStatsEntry   ::= SEQUENCE   {
+ApStatsEntry   ::= SEQUENCE {
     apIndex        Integer32,
     apMac          OCTET STRING,
     apName         DisplayString,
@@ -386,7 +458,7 @@ apIndex OBJECT-TYPE
     ::= { apStatsEntry 1 }
 
 apMac  OBJECT-TYPE
-    SYNTAX  OCTET STRING
+    SYNTAX  OCTET STRING (SIZE(1..162))
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
@@ -394,7 +466,7 @@ apMac  OBJECT-TYPE
     ::= { apStatsEntry 2 }
 
 apName  OBJECT-TYPE
-    SYNTAX  DisplayString
+    SYNTAX  DisplayString  (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
@@ -403,8 +475,8 @@ apName  OBJECT-TYPE
 
 apStatus  OBJECT-TYPE
     SYNTAX    INTEGER {
-        disconnected (0),
-        conencted (1)
+        disconnected (1),
+        conencted (2)
     }
     MAX-ACCESS read-only
     STATUS    current

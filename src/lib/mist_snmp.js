@@ -5,7 +5,7 @@ const ApStats = require("./models/apStats");
 
 class Agent {
 
-    constructor(enterprise_oid) {
+    constructor(communicty, listening_ip, enterprise_oid) {
         this.enterprise_oid = enterprise_oid;
 
         const options = {
@@ -20,9 +20,9 @@ class Agent {
             idBitsSize: 32,
         };
         var store = snmp.createModuleStore();
-        store.loadFromFile("./SNMPv2.mib");
-        store.loadFromFile("./SNMPv2-TC.mib");
-        store.loadFromFile("./MISTLAB.mib");
+        store.loadFromFile("./mibs/SNMPv2.mib");
+        store.loadFromFile("./mibs/SNMPv2-TC.mib");
+        store.loadFromFile("./mibs/MISTLAB.mib");
         var jsonModule = store.getModule("MISTLAB-MIB");
 
         // Fetch MIB providers, create an agent, and register the providers with your agent
@@ -31,11 +31,10 @@ class Agent {
         //this.agent = snmp.createAgent({ disableAuthorization: true }, function(error, data) {});
         this.agent = snmp.createAgent(options, function(err, data) {
             if (err) console.log(err)
-            console.log(data.pdu.varbinds)
             console.info(new Date(), 'SNMP Agent sent a response for the oid ' + data.pdu.varbinds[0].oid + ' from ' + data.rinfo.address);
         });
         this.authorizer = this.agent.getAuthorizer();
-        this.authorizer.addCommunity("public")
+        this.authorizer.addCommunity(communicty)
         this.mib = this.agent.getMib();
         this.mib.registerProviders(providers);
         console.log(this.mib)
@@ -44,7 +43,6 @@ class Agent {
 
 
     add_site(site) {
-        console.log(site)
         this.mib.addTableRow('siteEntry', [site.index, site.id, site.name]);
     }
     update_site(site) {

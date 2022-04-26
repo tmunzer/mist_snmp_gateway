@@ -1,0 +1,236 @@
+MISTLAB-MIB DEFINITIONS ::= BEGIN
+IMPORTS
+    Integer32, IpAddress, MODULE-IDENTITY, OBJECT-TYPE, enterprises 
+        FROM SNMPv2-SMI
+    DateAndTime, DisplayString
+        FROM SNMPv2-TC
+;
+--
+-- Main Descritpion
+--
+mistLab MODULE-IDENTITY
+    LAST-UPDATED "202204140000Z"
+    ORGANIZATION "Mist-Lab FR"
+    CONTACT-INFO
+        "Mist-Lab FR
+
+        EMail: tmunzer@juniper.net"
+
+    DESCRIPTION
+        "This MIB contains definition of something
+        I still have to describe..."
+
+    REVISION
+        "202204140000Z"
+
+    DESCRIPTION
+        "First revision"
+
+    ::= { enterprises 65535 }
+
+mistLabMIB      OBJECT IDENTIFIER ::= { mistLab 1 }
+
+
+--
+-- site level structure
+--
+
+
+sites   OBJECT IDENTIFIER ::= { mistLabMIB 1 }
+
+siteTable OBJECT-TYPE
+    SYNTAX SEQUENCE OF SiteEntry
+    MAX-ACCESS not-accessible
+    STATUS  current
+    DESCRIPTION
+        "This is mist sites table"
+    ::= { sites 1 }
+
+siteEntry    OBJECT-TYPE
+    SYNTAX       SiteEntry
+    MAX-ACCESS   not-accessible
+    STATUS       current
+    DESCRIPTION  
+        "This is the data structure associated to
+        mist sites table"
+    INDEX        { siteIndex }
+    ::= { siteTable 1 }
+
+SiteEntry    ::= SEQUENCE {
+    siteIndex           Integer32,
+    siteId          OCTET STRING,
+    siteName            OCTET STRING
+}
+
+siteIndex OBJECT-TYPE
+    SYNTAX    Integer32 (1..2147483647)
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "The site index in the snmp table"
+    ::= { siteEntry 1 }
+
+siteMistId  OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The Mist Site ID"
+    ::= { siteEntry 2 }
+
+siteName  OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The Mist Site Name"
+    ::= { siteEntry 3 }
+
+
+--
+-- AP level structure
+--
+aps   OBJECT IDENTIFIER ::= { siteIndex 4 }
+
+--
+-- Access Points description
+--
+stats          OBJECT IDENTIFIER ::= { aps 1 }
+
+--
+-- Access Points Status description
+--
+apStatsTable    OBJECT-TYPE
+    SYNTAX SEQUENCE OF AccessPointStatsEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        mist access points status table"
+    ::= { stats 1 }
+
+apStatsEntry    OBJECT-TYPE
+    SYNTAX    AccessPointStatsEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        mist access points status entry"
+    INDEX  { siteIndex,apIndex }
+    ::= { apStatsTable 1 }
+
+AccessPointStatsEntry   ::= SEQUENCE   {
+    apIndex        Integer32,
+    apMac          OCTET STRING,
+    apName         DisplayString,
+    apStatus       INTEGER,
+    apLastSeen     Integer32,
+    apUptime       Integer32,
+    apHardware     OCTET STRING,
+    apHardwareRev  OCTET STRING,
+    apSerial       OCTET STRING,
+    apIp           IpAddress,
+    apPublicIp     IpAddress,
+    apClientCount  Integer32
+}
+
+apIndex OBJECT-TYPE
+    SYNTAX    Integer32 (1..2147483647)
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "The Access Point ID in the snmp table"
+    ::= { apStatsEntry 1 }
+
+apMac  OBJECT-TYPE
+    SYNTAX  OCTET STRING
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Access Point MAC Address"
+    ::= { apStatsEntry 2 }
+
+apName  OBJECT-TYPE
+    SYNTAX  DisplayString
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Access Point Name"
+    ::= { apStatsEntry 3 }
+
+apStatus  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        disconnected (0),
+        conencted (1)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The connection status of the AP with the Mist Cloud."
+    ::= { apStatsEntry 4 }
+
+apLastSeen OBJECT-TYPE
+    SYNTAX    Integer32 (1..2147483647)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    ::= { apStatsEntry 5 }
+
+apUptime OBJECT-TYPE
+    SYNTAX    Integer32 (1..2147483647)
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "The Access Point Uptime"
+    ::= { apStatsEntry 6 }
+
+apHardware  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..32))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Access Point Hardware"
+    ::= { apStatsEntry 7 }
+
+apHardwareRev  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..6))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Access Point Hardware Revision"
+    ::= { apStatsEntry 8 }
+    
+apSerial  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..16))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Access Point Serial Number"
+    ::= { apStatsEntry 9 }
+      
+apIp  OBJECT-TYPE
+    SYNTAX  IpAddress
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Access Point IPv4 Address"
+    ::= { apStatsEntry 10 }
+    
+apPublicIp  OBJECT-TYPE
+    SYNTAX  IpAddress
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Access Point IPv4 Address"
+    ::= { apStatsEntry 11 }
+
+apClientCount  OBJECT-TYPE
+    SYNTAX    Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Number of connected clients to the 
+        Access Point"
+    ::= { apStatsEntry 12 }
+
+END

@@ -74,7 +74,7 @@ setTimeout(() => {
     sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, mist_snmp)
 }, 1000)
 
-// cron.schedule('* * * * *', () => {
-//     console.log('running a task every minute');
-//     sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, mist_snmp)
-// });
+cron.schedule('*/5 * * * *', () => {
+    console.log('running a task every minute');
+    sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, mist_snmp)
+});

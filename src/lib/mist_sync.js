@@ -20,7 +20,7 @@ function saveDevicesStats(site, devices, agent) {
                         device.index = index;
                         ApStatModel(device).save((err, res) => {
                             if (err) console.log(err);
-                            else agent.add_ap_stats(site.index, res)
+                            else agent.add_ap(res)
                         })
                     })
                 } else {
@@ -38,17 +38,17 @@ function saveDevicesStats(site, devices, agent) {
                             device.index = index;
                             ApStatModel(device).save((err, res) => {
                                 if (err) console.log(err);
-                                else agent.add_ap_stats(site.index, res)
+                                else agent.add_ap(res)
                             })
                         } else if (devices_to_update.includes(device.id)) {
                             ApStatModel.findOneAndUpdate({ site_id: device.site_id, id: device.id }, device, (err, res) => {
                                 if (err) console.log(err);
-                                else agent.update_ap_stats(site.index, res)
+                                else agent.update_ap(res)
                             })
                         } else if (devices_to_delete.includes(device.id)) {
                             ApStatModel.findOneAndDelete({ site_id: device.site_id, id: device.id }, device, (err, res) => {
                                 if (err) console.log(err);
-                                else agent.delete_ap_stats(site.index, res)
+                                else agent.delete_ap(res)
                             })
                         } else {
                             logger.error("Unknown AP:")

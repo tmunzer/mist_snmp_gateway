@@ -213,7 +213,7 @@ siteEntry    OBJECT-TYPE
     DESCRIPTION  
         "This is the data structure associated to
         mist sites table"
-    INDEX        { siteIndex }
+    INDEX        { siteId }
     ::= { siteTable 1 }
 
 SiteEntry    ::= SEQUENCE {
@@ -232,13 +232,13 @@ SiteEntry    ::= SEQUENCE {
     clientsConnected    Integer32
 }
 
-siteIndex OBJECT-TYPE
-    SYNTAX    Integer32 (1..2147483647)
-    MAX-ACCESS not-accessible
-    STATUS    current
-    DESCRIPTION
-        "The site index in the snmp table"
-    ::= { siteEntry 1 }
+--siteIndex OBJECT-TYPE
+--    SYNTAX    Integer32 (1..2147483647)
+--    MAX-ACCESS not-accessible
+--    STATUS    current
+--    DESCRIPTION
+--        "The site index in the snmp table"
+--    ::= { siteEntry 1 }
 
 siteId  OBJECT-TYPE
     SYNTAX  OCTET STRING  (SIZE(1..37))
@@ -246,7 +246,7 @@ siteId  OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "The Mist Site ID"
-    ::= { siteEntry 2 }
+    ::= { siteEntry 1 }
 
 siteName  OBJECT-TYPE
     SYNTAX  OCTET STRING  (SIZE(1..255))
@@ -254,7 +254,7 @@ siteName  OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "The Mist Site Name"
-    ::= { siteEntry 3 }
+    ::= { siteEntry 2 }
 
 siteCountry  OBJECT-TYPE
     SYNTAX  OCTET STRING  (SIZE(1..2))
@@ -262,7 +262,7 @@ siteCountry  OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "The Mist Site Name"
-    ::= { siteEntry 4 }
+    ::= { siteEntry 3 }
 
 siteAddress  OBJECT-TYPE
     SYNTAX  OCTET STRING  (SIZE(1..255))
@@ -270,70 +270,70 @@ siteAddress  OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "The Mist Site Name"
-    ::= { siteEntry 5 }
+    ::= { siteEntry 4 }
 
 apCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 6 }
+    ::= { siteEntry 5 }
 
 apConnected OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 7 }
+    ::= { siteEntry 6 }
 
 switchCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 8 }
+    ::= { siteEntry 7 }
 
 switchConnected OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 9 }
+    ::= { siteEntry 8 }
 
 gatewayCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 10 }
+    ::= { siteEntry 9 }
 
 gatewayConnected OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 11 }
+    ::= { siteEntry 10 }
 
 devicesCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 12 }
+    ::= { siteEntry 11 }
 
 clientsCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 13 }
+    ::= { siteEntry 12 }
 
 clientsConnected OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 14 }
+    ::= { siteEntry 13 }
 
 
 
@@ -358,7 +358,7 @@ apStatsEntry    OBJECT-TYPE
     DESCRIPTION
         "This is the data structure associated to
         mist access points status entry"
-    INDEX  { siteIndex,apMac }
+    INDEX  { siteId,apMac }
     ::= { apStatsTable 1 }
 
 ApStatsEntry   ::= SEQUENCE {
@@ -372,15 +372,24 @@ ApStatsEntry   ::= SEQUENCE {
     apSerial       OCTET STRING,
     apIp           IpAddress,
     apPublicIp     IpAddress,
-    apClientCount  Integer32
+    apClientCount  Integer32,
+    apLldpSysName    OCTET STRING,
+    apLldpSysDesc    OCTET STRING,
+    apLldpPortId     OCTET STRING,
+    apLldpPortDesc   OCTET STRING,
+    apLldpChassisId  OCTET STRING,
+    apLldpMed        INTEGER,
+    apPwrReq         Integer32,
+    apPwrAlloc       Integer32,
+    apPwrDraw        Integer32
 }
 
-apIndex OBJECT-TYPE
-    SYNTAX    Integer32 (1..2147483647)
-    MAX-ACCESS not-accessible
+apMac  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..162))
+    MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
-        "The Access Point ID in the snmp table"
+        "Access Point MAC Address"
     ::= { apStatsEntry 1 }
 
 apMac  OBJECT-TYPE
@@ -473,5 +482,151 @@ apClientCount  OBJECT-TYPE
         "Number of connected clients to the 
         Access Point"
     ::= { apStatsEntry 12 }
+
+apEthLldpSysName OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "LLDP Neighbord System Name"
+    ::= { apStatsEntry 13 }
+
+apEthLldpSysDesc OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "LLDP Neighbord System Description"
+    ::= { apStatsEntry 14 }
+
+apEthLldpPortId  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "LLDP Neighbord Port Id"
+    ::= { apStatsEntry 15 }
+
+apEthLldpPortDesc  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..255))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "LLDP Neighbord Port Description"
+    ::= { apStatsEntry 16 }
+    
+apEthLldpChassisId  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..16))
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "LLDP Neighbord Chassis ID"
+    ::= { apStatsEntry 17 }
+
+apEthLldpMed  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        False (1),
+        True (2)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "LLDP-MED supported by the LLDP Neighbord switch port"
+    ::= { apStatsEntry 18 }
+    
+apEthPwrReq  OBJECT-TYPE
+    SYNTAX  Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Power requested by the AP interface"
+    ::= { apStatsEntry 19 }
+
+apEthPwrAlloc  OBJECT-TYPE
+    SYNTAX    Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Power allocated by the PSE"
+    ::= { apStatsEntry 20 }
+
+apEthPwrDraw  OBJECT-TYPE
+    SYNTAX    Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Power drawed by the AP interface"
+    ::= { apStatsEntry 21 }
+
+--
+
+
+apEthTable    OBJECT-TYPE
+    SYNTAX SEQUENCE OF ApEthEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        mist access points status table"
+    ::= { ap 2 }
+
+apEthEntry    OBJECT-TYPE
+    SYNTAX    ApEthEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        mist access points status entry"
+    INDEX  { siteId,apMac,apEthName }
+    ::= { apEthTable 1 }
+
+ApEthEntry   ::= SEQUENCE {
+    apEthName           OCTET STRING,
+    apEthStatus         INTEGER,
+    apEthSpeed          INTEGER,
+    apEthDuplex         INTEGER,
+}
+
+apEthName  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..4))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "AP Interface Name"
+    ::= { apEthEntry 1 }
+
+apEthStatus  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        down (1),
+        up (2)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "AP Inteface Status"
+    ::= { apEthEntry 2 }
+
+apEthSpeed  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        0 (1),
+        10 (2),
+        100 (3),
+        1000 (4),
+        2500 (5),
+        5000 (6),
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "AP Interface Speed"
+    ::= { apEthEntry 3 }
+
+apEthDuplex OBJECT-TYPE
+    SYNTAX    INTEGER {
+        half (1),
+        full (2),
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "AP Interface Duplex"
+    ::= { apEthEntry 4 }
+
+
 
 END

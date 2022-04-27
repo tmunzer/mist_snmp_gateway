@@ -66,11 +66,11 @@ class Agent {
     }
 
     add_site(site) {
-        this.mib.addTableRow('siteEntry', [site.index, site.id, site.name, site.country_code, site.address, site.num_ap, site.num_ap_connected, site.num_switch, site.num_switch_connected, site.num_gateway, site.num_gateway_connected, site.num_devices, site.num_clients, site.num_devices_connected]);
+        this.mib.addTableRow('siteEntry', [site.id, site.name, site.country_code, site.address, site.num_ap, site.num_ap_connected, site.num_switch, site.num_switch_connected, site.num_gateway, site.num_gateway_connected, site.num_devices, site.num_clients, site.num_devices_connected]);
     }
     delete_site(site) {
         try {
-            this.mib.deleteTableRow('siteEntry', [site.index]);
+            this.mib.deleteTableRow('siteEntry', [site.id]);
         } catch {
             console.log("Unable to delete site index " + site.index + " from MIB")
         }
@@ -80,24 +80,95 @@ class Agent {
         this.add_site(site);
     }
 
-    add_ap_stats(site_index, ap) {
+    add_ap(ap) {
+        this.add_ap_stats(ap);
+        this.add_ap_eth(ap);
+    }
+    delete_ap(ap) {
+        this.delete_ap_stats(ap);
+        this.delete_ap_eth(ap);
+    }
+    update_ap(ap) {
+        this.delete_ap(ap);
+        this.add_ap(ap);
+    }
+
+    add_ap_stats(ap) {
         var status = 1;
         if (ap.status == "connected") status = 2;
         var name = ap.mac;
         if (ap.name) name = ap.name;
-        this.mib.addTableRow('apStatsEntry', [site_index, ap.mac, ap.mac, name, status, ap.last_seen, ap.uptime, ap.model, ap.hw_rev, ap.serial, ap.ip, ap.ext_ip, ap.num_clients]);
+        var lldp_med = 1;
+        if (ap.lldp_stat.lldp_med_supported) lldp_med = 2;
+        this.mib.addTableRow('apStatsEntry', [
+            ap.site_id,
+            ap.mac,
+            name,
+            status,
+            ap.last_seen,
+            ap.uptime,
+            ap.model,
+            ap.hw_rev,
+            ap.serial,
+            ap.ip,
+            ap.ext_ip,
+            ap.num_clients,
+            ap.lldp_stat.system_name,
+            ap.lldp_stat.system_desc,
+            ap.lldp_stat.port_id,
+            ap.lldp_stat.port_desc,
+            ap.lldp_stat.chassis_id,
+            lldp_med,
+            ap.lldp_stat.power_requested,
+            ap.lldp_stat.power_allocated,
+            ap.lldp_stat.power_draw
+        ]);
     }
-    delete_ap_stats(site_index, ap) {
+    delete_ap_stats(ap) {
         try {
-            this.mib.deleteTableRow('apStatsEntry', [site_index, ap.mac]);
+            this.mib.deleteTableRow('apStatsEntry', [ap.site_id, ap.mac]);
         } catch (error) {
-            console.log("Unable to delete ap index " + site_index + "." + ap.mac + " from MIB")
+            console.log("Unable to delete ap index " + ap.site_id + "." + ap.mac + " from MIB")
         }
     }
-    update_ap_stats(site_index, ap) {
-        this.delete_ap_stats(site_index, ap);
-        this.add_ap_stats(site_index, ap);
+
+    add_ap_eth(ap) {
+        for (const [key, value] of Object.entries(ap.port_stat)) {
+            var status = 1;
+            if (value.up) status = 2;
+            var speed = 1;
+            switch (value.speed) {
+                case 10:
+                    speed = 2;
+                    break;
+                case 100:
+                    speed = 3;
+                    break;
+                case 1000:
+                    speed = 4;
+                    break;
+                case 2500:
+                    speed = 5;
+                    break;
+                case 5000:
+                    speed = 6;
+                    break;
+            }
+            var duplex = 1;
+            if (value.full_duplex) duplex = 2;
+            this.mib.addTableRow('apEthEntry', [ap.site_id, ap.mac, key, status, speed, duplex]);
+        }
     }
+    delete_ap_eth(ap) {
+        for (const [key, value] of Object.entries(ap.port_stat)) {
+            try {
+                this.mib.deleteTableRow('apEthEntry', [ap.site_id, ap.mac, key]);
+            } catch (error) {
+                console.log("Unable to delete ap interface " + ap.site_id + "." + ap.mac + "." + key + " from MIB")
+            }
+        }
+    }
+
 
     load() {
         Sites.find({})
@@ -109,7 +180,7 @@ class Agent {
                         .exec((err, aps) => {
                             this.add_site(site);
                             aps.forEach(ap => {
-                                this.add_ap_stats(site.index, ap)
+                                this.add_ap(ap)
                             })
                         })
                 })

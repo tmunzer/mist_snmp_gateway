@@ -4,8 +4,6 @@ IMPORTS
         FROM SNMPv2-SMI
     DisplayString
         FROM SNMPv2-TC
-    OBJECT-GROUP
-        FROM SNMPv2-CONF
 ;
 --
 -- Main Descritpion
@@ -37,34 +35,6 @@ mistLab MODULE-IDENTITY
 
 
 organization OBJECT IDENTIFIER ::= { mistLab 1 }
-
-orgGroup OBJECT-GROUP
-    OBJECTS { 
-        orgName,
-        orgId,
-        numSites,
-        numDevices,
-        numInventory,
-        numDevicesConnected,
-        numDevicesDisconnected,
-        sleCoverageTotal,
-        sleCoverageOk,
-        sleFailedToConnectTotal,
-        sleFailedToConnectOk,
-        sleRoamingTotal,
-        sleRoamingOk,
-        sleTimeToConnectTotal,
-        sleTimeToConnectOk,
-        sleThroughputTotal,
-        sleThroughputOk,
-        sleCapacityTotal,
-        sleCapacityOk
-    }
-    STATUS  current
-    DESCRIPTION
-            "A collection of objects providing basic instrumentation and
-            control of an SNMPv2 entity."
-    ::= { organization 4 }
 
 orgName OBJECT-TYPE
     SYNTAX OCTET STRING
@@ -228,28 +198,6 @@ sleCapacityOk OBJECT-TYPE
 
 sites   OBJECT IDENTIFIER ::= { mistLab 2 }
 
-siteStatsGroup OBJECT-GROUP
-    OBJECTS { 
-        siteId,
-        siteName,
-        siteCountry,
-        siteAddress,
-        apCount,
-        apConnected,
-        switchCount,
-        switchConnected,
-        gatewayCount,
-        gatewayConnected,
-        devicesCount,
-        clientsCount,
-        clientsConnected
-    }
-    STATUS  current
-    DESCRIPTION
-            "A collection of objects providing basic instrumentation and
-            control of an SNMPv2 entity."
-    ::= { sites 2 }
-
 siteTable OBJECT-TYPE
     SYNTAX SEQUENCE OF SiteEntry
     MAX-ACCESS not-accessible
@@ -269,7 +217,6 @@ siteEntry    OBJECT-TYPE
     ::= { siteTable 1 }
 
 SiteEntry    ::= SEQUENCE {
-    siteIndex           Integer32,
     siteId              OCTET STRING,
     siteName            OCTET STRING,
     siteCountry         OCTET STRING,
@@ -395,26 +342,6 @@ clientsConnected OBJECT-TYPE
 --
 ap   OBJECT IDENTIFIER ::= { mistLab 3 }
 
-apStatsGroup OBJECT-GROUP
-    OBJECTS { 
-        apMac,
-        apName,
-        apStatus,
-        apLastSeen,
-        apUptime,
-        apHardware,
-        apHardwareRev,
-        apSerial,
-        apIp,
-        apPublicIp,
-        apClientCount
-    }
-    STATUS  current
-    DESCRIPTION
-            "A collection of objects providing basic instrumentation and
-            control of an SNMPv2 entity."
-    ::= { ap 2 }
-
 apStatsTable    OBJECT-TYPE
     SYNTAX SEQUENCE OF ApStatsEntry
     MAX-ACCESS not-accessible
@@ -431,11 +358,10 @@ apStatsEntry    OBJECT-TYPE
     DESCRIPTION
         "This is the data structure associated to
         mist access points status entry"
-    INDEX  { siteIndex,apIndex }
+    INDEX  { siteIndex,apMac }
     ::= { apStatsTable 1 }
 
 ApStatsEntry   ::= SEQUENCE {
-    apIndex        Integer32,
     apMac          OCTET STRING,
     apName         DisplayString,
     apStatus       INTEGER,

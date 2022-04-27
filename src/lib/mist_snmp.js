@@ -69,7 +69,11 @@ class Agent {
         this.mib.addTableRow('siteEntry', [site.index, site.id, site.name, site.country_code, site.address, site.num_ap, site.num_ap_connected, site.num_switch, site.num_switch_connected, site.num_gateway, site.num_gateway_connected, site.num_devices, site.num_clients, site.num_devices_connected]);
     }
     delete_site(site) {
-        this.mib.deleteTableRow('siteEntry', [site.index]);
+        try {
+            this.mib.deleteTableRow('siteEntry', [site.index]);
+        } catch {
+            console.log("Unable to delete site index " + site.index + " from MIB")
+        }
     }
     update_site(site) {
         this.delete_site(site);
@@ -81,10 +85,14 @@ class Agent {
         if (ap.status == "connected") status = 2;
         var name = ap.mac;
         if (ap.name) name = ap.name;
-        this.mib.addTableRow('apStatsEntry', [site_index, ap.index, ap.mac, name, status, ap.last_seen, ap.uptime, ap.model, ap.hw_rev, ap.serial, ap.ip, ap.ext_ip, ap.num_clients]);
+        this.mib.addTableRow('apStatsEntry', [site_index, ap.mac, ap.mac, name, status, ap.last_seen, ap.uptime, ap.model, ap.hw_rev, ap.serial, ap.ip, ap.ext_ip, ap.num_clients]);
     }
     delete_ap_stats(site_index, ap) {
-        this.mib.deleteTableRow('apStatsEntry', [site_index, ap.index]);
+        try {
+            this.mib.deleteTableRow('apStatsEntry', [site_index, ap.mac]);
+        } catch (error) {
+            console.log("Unable to delete ap index " + site_index + "." + ap.mac + " from MIB")
+        }
     }
     update_ap_stats(site_index, ap) {
         this.delete_ap_stats(site_index, ap);
@@ -99,11 +107,10 @@ class Agent {
                     ApStats.find({ site_id: site.id })
                         .sort({ index: 1 })
                         .exec((err, aps) => {
-                            //if (aps.length > 0) 
                             this.add_site(site);
-                            // aps.forEach(ap => {
-                            //     this.add_ap_stats(site.index, ap)
-                            // })
+                            aps.forEach(ap => {
+                                this.add_ap_stats(site.index, ap)
+                            })
                         })
                 })
             })

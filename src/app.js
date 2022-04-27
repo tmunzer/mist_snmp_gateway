@@ -24,7 +24,13 @@ try {
         MONGO_PASSWORD: process.env.MONGO_PASSWORD || null,
         MONGO_ENC_KEY: process.env.MONGO_ENC_KEY || null,
         MONGO_SIG_KEY: process.env.MONGO_SIG_KEY || null,
-        SNMP_COMMUNITY: process.env.SNMP_COMMUNITY || "public",
+        SNMP_VERSION: process.env.SNMP_VERSION || 2,
+        SNMP_V2C_COMMUNITY: process.env.SNMP_V2C_COMMUNITY || "public",
+        SNMP_V3_USER: process.env.SNMP_V3_USER || null,
+        SNMP_V3_AUTH_PROTOCOL: process.env.SNMP_V3_AUTH_PROTOCOL || "SHA",
+        SNMP_V3_AUTH_KEY: process.env.SNMP_V3_AUTH_KEY || null,
+        SNMP_V3_PRIV_PROTOCOL: process.env.SNMP_V3_PRIV_PROTOCOL || "AES",
+        SNMP_V3_PRIV_KEY: process.env.SNMP_V3_PRIV_KEY || null,
         SNMP_SERVER_IP: process.env.SNMP_SERVER_IP || "0.0.0.0/0",
         SNMP_OID: process.env.SNMP_OID || 65535
     }
@@ -32,14 +38,20 @@ try {
     logger.info("Config loaded!")
     global.CONFIG = CONFIG;
 
-    logger.info("MIST_HOST     : " + global.CONFIG.MIST_HOST);
-    logger.info("MIST_ORG_ID   : " + global.CONFIG.MIST_ORG_ID);
-    logger.info("MONGO_HOST    : " + global.CONFIG.MONGO_HOST);
-    logger.info("MONGO_DB      : " + global.CONFIG.MONGO_DB);
-    logger.info("MONGO_USER    : " + global.CONFIG.MONGO_USER);
-    logger.info("SNMP_COMMUNITY: " + global.CONFIG.SNMP_COMMUNITY);
-    logger.info("SNMP_SERVER_IP: " + global.CONFIG.SNMP_SERVER_IP);
-    logger.info("SNMP_OID      : " + global.CONFIG.SNMP_OID);
+    logger.info("MIST_HOST            : " + global.CONFIG.MIST_HOST);
+    logger.info("MIST_ORG_ID          : " + global.CONFIG.MIST_ORG_ID);
+    logger.info("MONGO_HOST           : " + global.CONFIG.MONGO_HOST);
+    logger.info("MONGO_DB             : " + global.CONFIG.MONGO_DB);
+    logger.info("MONGO_USER           : " + global.CONFIG.MONGO_USER);
+    logger.info("SNMP_VERSION         : " + global.CONFIG.SNMP_VERSION);
+    if (global.CONFIG.SNMP_VERSION == 2) logger.info("SNMP_V2C_COMMUNITY   : " + global.CONFIG.SNMP_V2C_COMMUNITY);
+    else if (global.CONFIG.SNMP_VERSION == 3) {
+        logger.info("SNMP_V3_USER         : " + global.CONFIG.SNMP_V3_USER);
+        logger.info("SNMP_V3_AUTH_PROTOCOL: " + global.CONFIG.SNMP_V3_AUTH_PROTOCOL);
+        logger.info("SNMP_V3_PRIV_PROTOCOL: " + global.CONFIG.SNMP_V3_PRIV_PROTOCOL);
+    }
+    logger.info("SNMP_SERVER_IP       : " + global.CONFIG.SNMP_SERVER_IP);
+    logger.info("SNMP_OID             : " + global.CONFIG.SNMP_OID);
 }
 
 global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'), "");
@@ -64,8 +76,17 @@ mongoose.connect('mongodb://' + mongo_host + '/' + global.CONFIG.MONGO_DB + "?au
  AGENTX
  ================================================================*/
 // Default options
-mist_snmp = new Agent(global.CONFIG.SNMP_COMMUNITY, global.SNMP_SERVER_IP, global.CONFIG.SNMP_OID)
-
+mist_snmp = new Agent(
+    global.CONFIG.SNMP_VERSION,
+    global.CONFIG.SNMP_V2C_COMMUNITY,
+    global.CONFIG.SNMP_V3_USER,
+    global.CONFIG.SNMP_V3_AUTH_PROTOCOL,
+    global.CONFIG.SNMP_V3_AUTH_KEY,
+    global.CONFIG.SNMP_V3_PRIV_PROTOCOL,
+    global.CONFIG.SNMP_V3_PRIV_KEY,
+    global.SNMP_SERVER_IP,
+    global.CONFIG.SNMP_OID
+)
 
 /*================================================================
  CRON

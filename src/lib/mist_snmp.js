@@ -5,25 +5,31 @@ const ApStats = require("./models/apStats");
 
 class Agent {
 
-    constructor(communicty, listening_ip, enterprise_oid) {
+    constructor(version, v2_community, v3_user, v3_auth_protocol, v3_auth_key, v3_priv_protocol, v3_priv_key, listening_ip, enterprise_oid) {
         this.enterprise_oid = enterprise_oid;
-
-        const options = {
+        var options = {
             port: 161,
-            retries: 1,
-            timeout: 5000,
-            backoff: 1.0,
             transport: "udp4",
-            trapPort: 162,
-            version: snmp.Version2c,
-            backwardsGetNexts: true,
-            idBitsSize: 32,
+            trapPort: 162
         };
+        console.log("here")
+        switch (version) {
+            case 3:
+                options.version = snmp.Version3;
+                options.disableAuthorization = false;
+                options.accessControlModelType = snmp.AccessControlModelType.None;
+                options.engineID = "8000B98380CE0EF89195203BD839AAB690";
+            case 2:
+            default:
+                options.version = snmp.Version2c;
+                break;
+        }
+
+
         var store = snmp.createModuleStore();
         store.loadFromFile("./mibs/SNMPv2.mib");
         store.loadFromFile("./mibs/SNMPv2-TC.mib");
         store.loadFromFile("./mibs/MISTLAB.mib");
-        var jsonModule = store.getModule("MISTLAB-MIB");
 
         // Fetch MIB providers, create an agent, and register the providers with your agent
         var providers = store.getProvidersForModule("MISTLAB-MIB");
@@ -31,10 +37,28 @@ class Agent {
         //this.agent = snmp.createAgent({ disableAuthorization: true }, function(error, data) {});
         this.agent = snmp.createAgent(options, function(err, data) {
             if (err) console.log(err)
-            console.info(new Date(), 'SNMP Agent sent a response for the oid ' + data.pdu.varbinds[0].oid + ' from ' + data.rinfo.address);
+            if (data) console.info(new Date(), 'SNMP Agent sent a response for the oid ' + data.pdu.varbinds[0].oid + ' from ' + data.rinfo.address);
         });
+
+
         this.authorizer = this.agent.getAuthorizer();
-        this.authorizer.addCommunity(communicty)
+        if (version == 2) {
+            this.authorizer.addCommunity(v2_community)
+        } else if (version == 3) {
+            var user = {
+                name: v3_user,
+                level: snmp.SecurityLevel.authPriv,
+                authKey: v3_auth_key,
+                privKey: v3_priv_key
+            };
+            if (String(v3_auth_protocol).toLowerCase() == "md5") user.authProtocol = snmp.AuthProtocols.md5;
+            else user.authProtocol = snmp.AuthProtocols.sha;
+            if (String(v3_priv_protocol).toLowerCase() == "aes") user.privProtocol = snmp.PrivProtocols.aes;
+            else user.privProtocol = snmp.PrivProtocols.des;
+            this.authorizer.addUser(user);
+        }
+
+
         this.mib = this.agent.getMib();
         this.mib.registerProviders(providers);
         this.load();

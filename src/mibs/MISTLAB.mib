@@ -572,17 +572,17 @@ apEthEntry    OBJECT-TYPE
     DESCRIPTION
         "This is the data structure associated to
         mist access points status entry"
-    INDEX  { siteId,apMac,apEthName }
+    INDEX  { siteId,apMac,apEthPort }
     ::= { apEthTable 1 }
 
 ApEthEntry   ::= SEQUENCE {
-    apEthName           OCTET STRING,
+    apEthPort           OCTET STRING,
     apEthStatus         INTEGER,
     apEthSpeed          INTEGER,
     apEthDuplex         INTEGER,
 }
 
-apEthName  OBJECT-TYPE
+apEthPort  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..4))
     MAX-ACCESS read-only
     STATUS    current

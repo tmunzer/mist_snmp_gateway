@@ -261,7 +261,7 @@ siteCountry  OBJECT-TYPE
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
-        "The Mist Site Name"
+        "The Mist Site Country"
     ::= { siteEntry 3 }
 
 siteAddress  OBJECT-TYPE
@@ -269,71 +269,72 @@ siteAddress  OBJECT-TYPE
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION
-        "The Mist Site Name"
+        "The Mist Site Address"
     ::= { siteEntry 4 }
 
 apCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of APs"
     ::= { siteEntry 5 }
 
 apConnected OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of APs connected"
     ::= { siteEntry 6 }
 
 switchCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of switches"
     ::= { siteEntry 7 }
 
 switchConnected OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of switches connected"
     ::= { siteEntry 8 }
 
 gatewayCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of gateways"
     ::= { siteEntry 9 }
 
 gatewayConnected OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of connected gateways"
     ::= { siteEntry 10 }
 
 devicesCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of network devices"
     ::= { siteEntry 11 }
+
+devicesConnected OBJECT-TYPE
+    SYNTAX    Integer32 (1..65535)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Number of network devices connected"
+    ::= { siteEntry 12 }
 
 clientsCount OBJECT-TYPE
     SYNTAX    Integer32 (1..65535)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { siteEntry 12 }
-
-clientsConnected OBJECT-TYPE
-    SYNTAX    Integer32 (1..65535)
-    MAX-ACCESS read-only
-    STATUS current
-    DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
+    DESCRIPTION "Number of Wireless clients connected"
     ::= { siteEntry 13 }
+
 
 
 
@@ -562,7 +563,7 @@ apEthTable    OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "This is the data structure associated to
-        mist access points status table"
+        mist access points interfaces table"
     ::= { ap 2 }
 
 apEthEntry    OBJECT-TYPE
@@ -571,7 +572,7 @@ apEthEntry    OBJECT-TYPE
     STATUS    current
     DESCRIPTION
         "This is the data structure associated to
-        mist access points status entry"
+        mist access points interfaces entry"
     INDEX  { siteId,apMac,apEthPort }
     ::= { apEthTable 1 }
 

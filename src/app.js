@@ -31,11 +31,12 @@ try {
         SNMP_V3_AUTH_KEY: process.env.SNMP_V3_AUTH_KEY || null,
         SNMP_V3_PRIV_PROTOCOL: process.env.SNMP_V3_PRIV_PROTOCOL || "AES",
         SNMP_V3_PRIV_KEY: process.env.SNMP_V3_PRIV_KEY || null,
-        SNMP_SERVER_IP: process.env.SNMP_SERVER_IP || "0.0.0.0/0",
+        SNMP_LISTENING_IP: process.env.SNMP_LISTENING_IP || null,
         SNMP_OID: process.env.SNMP_OID || 65535
     }
 } finally {
-    logger.info("Config loaded!")
+    logger.info("--------------------------------------------------------------------------------")
+    logger.info("                               CONFIG")
     global.CONFIG = CONFIG;
 
     logger.info("MIST_HOST            : " + global.CONFIG.MIST_HOST);
@@ -50,8 +51,9 @@ try {
         logger.info("SNMP_V3_AUTH_PROTOCOL: " + global.CONFIG.SNMP_V3_AUTH_PROTOCOL);
         logger.info("SNMP_V3_PRIV_PROTOCOL: " + global.CONFIG.SNMP_V3_PRIV_PROTOCOL);
     }
-    logger.info("SNMP_SERVER_IP       : " + global.CONFIG.SNMP_SERVER_IP);
+    logger.info("SNMP_LISTENING_IP    : " + global.CONFIG.SNMP_LISTENING_IP);
     logger.info("SNMP_OID             : " + global.CONFIG.SNMP_OID);
+    logger.info("--------------------------------------------------------------------------------")
 }
 
 global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'), "");
@@ -84,7 +86,7 @@ mist_snmp = new Agent(
     global.CONFIG.SNMP_V3_AUTH_KEY,
     global.CONFIG.SNMP_V3_PRIV_PROTOCOL,
     global.CONFIG.SNMP_V3_PRIV_KEY,
-    global.SNMP_SERVER_IP,
+    global.CONFIG.SNMP_LISTENING_IP,
     global.CONFIG.SNMP_OID
 )
 

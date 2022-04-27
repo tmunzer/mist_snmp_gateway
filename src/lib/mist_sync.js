@@ -19,7 +19,7 @@ function saveDevicesStats(site, devices, agent) {
                         index += 1;
                         device.index = index;
                         ApStatModel(device).save((err, res) => {
-                            if (err) console.log(err);
+                            if (err) logger.error(err);
                             else agent.add_ap(res)
                         })
                     })
@@ -37,22 +37,22 @@ function saveDevicesStats(site, devices, agent) {
                             index += 1;
                             device.index = index;
                             ApStatModel(device).save((err, res) => {
-                                if (err) console.log(err);
+                                if (err) logger.error(err);
                                 else agent.add_ap(res)
                             })
                         } else if (devices_to_update.includes(device.id)) {
                             ApStatModel.findOneAndUpdate({ site_id: device.site_id, id: device.id }, device, (err, res) => {
-                                if (err) console.log(err);
+                                if (err) logger.error(err);
                                 else agent.update_ap(res)
                             })
                         } else if (devices_to_delete.includes(device.id)) {
                             ApStatModel.findOneAndDelete({ site_id: device.site_id, id: device.id }, device, (err, res) => {
-                                if (err) console.log(err);
+                                if (err) logger.error(err);
                                 else agent.delete_ap(res)
                             })
                         } else {
                             logger.error("Unknown AP:")
-                            console.log(device)
+                            logger.warning(device)
                         }
                     })
                 }
@@ -62,7 +62,7 @@ function saveDevicesStats(site, devices, agent) {
 
 function checkApStatModel(host, token, site, new_site, agent) {
     Devices.stats(host, token, site.id, "ap", (err, devices) => {
-        if (err) console.log(err);
+        if (err) logger.error(err);
         if (new_site) agent.add_site(site);
         else agent.update_site(site);
         saveDevicesStats(site, devices, agent)
@@ -72,7 +72,7 @@ function checkApStatModel(host, token, site, new_site, agent) {
 
 function siteStats(host, token, site_id, cb) {
     Sites.stats(host, token, site_id, (err, data) => {
-        if (err) console.log(err)
+        if (err) logger.error(err)
         else {
             const stats = {
                 id: data.id,
@@ -104,9 +104,9 @@ function processSites(host, token, sites, agent) {
             sites.forEach(site => {
                 siteStats(host, token, site.id, (stats) => {
                     SiteModel.findOne({ id: site.id }, (err, data) => {
-                        if (err) console.log(err);
+                        if (err) logger.error(err);
                         else if (data) SiteModel.findOneAndUpdate({ _id: data._id }, stats, (err, res) => {
-                            if (err) console.log(err);
+                            if (err) logger.error(err);
                             else {
                                 checkApStatModel(host, token, res, false, agent);
                             }
@@ -115,7 +115,7 @@ function processSites(host, token, sites, agent) {
                             index += 1;
                             stats.index = index
                             SiteModel(stats).save((err, res) => {
-                                if (err) console.log(err);
+                                if (err) logger.error(err);
                                 else {
                                     checkApStatModel(host, token, res, true, agent);
                                 }
@@ -134,11 +134,11 @@ function processOrg(host, token, org_id, agent) {
         stats: {}
     }
     Orgs.org(host, token, org_id, (err, data) => {
-        if (err) console.log(err);
+        if (err) logger.error(err);
         else {
             org.name = data.name;
             Orgs.stats(host, token, org_id, (err, data) => {
-                if (err) console.log(err);
+                if (err) logger.error(err);
                 else {
                     org.stats = {
                         num_sites: data.num_sites,
@@ -174,7 +174,7 @@ function processOrg(host, token, org_id, agent) {
                         }
                     })
                     OrgModel.findOneAndUpdate({ id: org.id }, org, { upsert: true, setDefaultsOnInsert: true }, (err) => {
-                        if (err) console.log(err);
+                        if (err) logger.error(err);
                         agent.update_org(org);
                     });
                 }

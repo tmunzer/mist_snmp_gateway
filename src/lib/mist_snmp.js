@@ -1,3 +1,4 @@
+const logger = require("./logger");
 const snmp = require('net-snmp');
 const Sites = require("./models/sites");
 const ApStats = require("./models/apStats");
@@ -10,9 +11,9 @@ class Agent {
         var options = {
             port: 161,
             transport: "udp4",
-            trapPort: 162
+            trapPort: 162,
+            address: listening_ip
         };
-        console.log("here")
         switch (version) {
             case 3:
                 options.version = snmp.Version3;
@@ -25,7 +26,6 @@ class Agent {
                 break;
         }
 
-
         var store = snmp.createModuleStore();
         store.loadFromFile("./mibs/SNMPv2.mib");
         store.loadFromFile("./mibs/SNMPv2-TC.mib");
@@ -36,8 +36,8 @@ class Agent {
         // Not recommended - but authorization and callback turned off for example brevity
         //this.agent = snmp.createAgent({ disableAuthorization: true }, function(error, data) {});
         this.agent = snmp.createAgent(options, function(err, data) {
-            if (err) console.log(err)
-            if (data) console.info(new Date(), 'SNMP Agent sent a response for the oid ' + data.pdu.varbinds[0].oid + ' from ' + data.rinfo.address);
+            if (err) logger.error(err)
+            if (data) logger.notice('SNMP Agent sent a response for the oid ' + data.pdu.varbinds[0].oid + ' from ' + data.rinfo.address);
         });
 
 
@@ -96,7 +96,7 @@ class Agent {
         try {
             this.mib.deleteTableRow('siteEntry', [site.id]);
         } catch {
-            console.log("Unable to delete site index " + site.index + " from MIB")
+            logger.warning("Unable to delete site index " + site.index + " from MIB")
         }
     }
     update_site(site) {
@@ -152,7 +152,7 @@ class Agent {
         try {
             this.mib.deleteTableRow('apStatsEntry', [ap.site_id, ap.mac]);
         } catch (error) {
-            console.log("Unable to delete ap index " + ap.site_id + "." + ap.mac + " from MIB")
+            logger.warning("Unable to delete ap index " + ap.site_id + "." + ap.mac + " from MIB")
         }
     }
 
@@ -188,7 +188,7 @@ class Agent {
             try {
                 this.mib.deleteTableRow('apEthEntry', [ap.site_id, ap.mac, key]);
             } catch (error) {
-                console.log("Unable to delete ap interface " + ap.site_id + "." + ap.mac + "." + key + " from MIB")
+                logger.warning("Unable to delete ap interface " + ap.site_id + "." + ap.mac + "." + key + " from MIB")
             }
         }
     }

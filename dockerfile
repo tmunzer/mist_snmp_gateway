@@ -6,6 +6,7 @@ LABEL one.stag.mwtt.release-date="2020-04-08"
 
 COPY ./src /app/
 WORKDIR /app
+RUN npm install
 
 EXPOSE 161/tcp
 EXPOSE 161/udp

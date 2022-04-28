@@ -189,7 +189,7 @@ function processOrg(host, token, org_id, agent) {
 const sync = async function(host, token, org_id, site_ids, agent) {
     processOrg(host, token, org_id, agent)
     Orgs.sites(host, token, org_id, (err, sites) => {
-        if (err) logger.err(err)
+        if (err) logger.error(err)
         else if (sites && sites.length > 0) {
             processSites(host, token, sites, site_ids, agent);
         }

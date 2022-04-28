@@ -18,6 +18,7 @@ try {
         MIST_TOKEN: process.env.MIST_TOKEN || null,
         MIST_HOST: process.env.MIST_HOST || "api.mist.com",
         MIST_ORG_ID: process.env.MIST_ORG_ID || null,
+        MIST_SITE_IDS: process.env.MIST_SITE_IDS || null,
         MONGO_HOST: process.env.MONGO_HOST || null,
         MONGO_DB: process.env.MONGO_DB || "snmp",
         MONGO_USER: process.env.MONGO_USER || null,
@@ -35,12 +36,14 @@ try {
         SNMP_OID: process.env.SNMP_OID || 65535
     }
 } finally {
-    logger.info("--------------------------------------------------------------------------------")
-    logger.info("                               CONFIG")
     global.CONFIG = CONFIG;
+    if (global.CONFIG.MIST_SITE_IDS) global.CONFIG.MIST_SITE_IDS = global.CONFIG.MIST_SITE_IDS.split(",")
 
+    logger.info("----------------------------------------------------------------------")
+    logger.info("                               CONFIG")
     logger.info("MIST_HOST            : " + global.CONFIG.MIST_HOST);
     logger.info("MIST_ORG_ID          : " + global.CONFIG.MIST_ORG_ID);
+    logger.info("MIST_SITE_IDS        : " + global.CONFIG.MIST_SITE_IDS);
     logger.info("MONGO_HOST           : " + global.CONFIG.MONGO_HOST);
     logger.info("MONGO_DB             : " + global.CONFIG.MONGO_DB);
     logger.info("MONGO_USER           : " + global.CONFIG.MONGO_USER);
@@ -53,7 +56,7 @@ try {
     }
     logger.info("SNMP_LISTENING_IP    : " + global.CONFIG.SNMP_LISTENING_IP);
     logger.info("SNMP_OID             : " + global.CONFIG.SNMP_OID);
-    logger.info("--------------------------------------------------------------------------------")
+    logger.info("----------------------------------------------------------------------")
 }
 
 global.appPath = path.dirname(require.main.filename).replace(new RegExp('/bin$'), "");
@@ -94,10 +97,10 @@ mist_snmp = new Agent(
  CRON
  ================================================================*/
 setTimeout(() => {
-    sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, mist_snmp)
+    sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, global.CONFIG.MIST_SITE_IDS, mist_snmp)
 }, 1000)
 
 cron.schedule('*/5 * * * *', () => {
     console.log('running a task every minute');
-    sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, mist_snmp)
+    sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, global.CONFIG.MIST_SITE_IDS, mist_snmp)
 });

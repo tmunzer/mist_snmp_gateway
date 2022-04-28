@@ -66,6 +66,13 @@ class Agent {
 
 
     update_org(org) {
+        if (!org.stats.sle.coverage) org.stats.sle.coverage = { total: -1, ok: -1 }
+        if (!org.stats.sle.failed_to_connect) org.stats.sle.failed_to_connect = { total: -1, ok: -1 }
+        if (!org.stats.sle.roaming) org.stats.sle.roaming = { total: -1, ok: -1 }
+        if (!org.stats.sle.time_to_connect) org.stats.sle.time_to_connect = { total: -1, ok: -1 }
+        if (!org.stats.sle.throughput) org.stats.sle.throughput = { total: -1, ok: -1 }
+        if (!org.stats.sle.capacity) org.stats.sle.capacity = { total: -1, ok: -1 }
+
         this.mib.setScalarValue('orgName', org.name)
         this.mib.setScalarValue('orgId', org.id)
         this.mib.setScalarValue('numSites', org.stats.num_sites)
@@ -77,8 +84,8 @@ class Agent {
         this.mib.setScalarValue('sleCoverageOk', org.stats.sle.coverage.ok)
         this.mib.setScalarValue('sleFailedToConnectTotal', org.stats.sle.failed_to_connect.total)
         this.mib.setScalarValue('sleFailedToConnectOk', org.stats.sle.failed_to_connect.ok)
-            //this.mib.setScalarValue('sleRoamingTotal', org.stats.sle.roaming.total)
-            //this.mib.setScalarValue('sleRoamingOk', org.stats.sle.roaming.ok)
+        this.mib.setScalarValue('sleRoamingTotal', org.stats.sle.roaming.total)
+        this.mib.setScalarValue('sleRoamingOk', org.stats.sle.roaming.ok)
         this.mib.setScalarValue('sleTimeToConnectTotal', org.stats.sle.time_to_connect.total)
         this.mib.setScalarValue('sleTimeToConnectOk', org.stats.sle.time_to_connect.ok)
         this.mib.setScalarValue('sleThroughputTotal', org.stats.sle.throughput.total)

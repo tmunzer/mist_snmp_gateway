@@ -18,7 +18,7 @@ try {
         MIST_TOKEN: process.env.MIST_TOKEN || null,
         MIST_HOST: process.env.MIST_HOST || "api.mist.com",
         MIST_ORG_ID: process.env.MIST_ORG_ID || null,
-        MIST_SITE_IDS: process.env.MIST_SITE_IDS || null,
+        MIST_SITE_IDS: process.env.MIST_SITE_IDS || "",
         MONGO_HOST: process.env.MONGO_HOST || null,
         MONGO_DB: process.env.MONGO_DB || "snmp",
         MONGO_USER: process.env.MONGO_USER || null,

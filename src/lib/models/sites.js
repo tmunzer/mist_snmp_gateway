@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const SiteSchema = new mongoose.Schema({
     index: Number,
+    last_updated: Number,
     id: String,
     name: String,
     country_code: String,

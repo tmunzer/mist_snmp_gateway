@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const OrgSchema = new mongoose.Schema({
+    last_updated: Number,
     id: String,
     name: String,
     stats: {

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const ApStatsSchema = new mongoose.Schema({
     index: Number,
+    last_updated: Number,
     port_stat: {
         eth1: {
             up: Boolean,

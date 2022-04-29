@@ -58,8 +58,11 @@ This Reference Application can be used as a standalone Application, or it can be
 ## Deploy the Docker version (recommanded)
 This application is available as a [Docker Image](https://hub.docker.com/repository/docker/tmunzer/mist_webhook_monitor). The Dockerfile is also available if you want top build it on your own.
 
+The Docker Image exposes the following ports:
+* UDP161
+
 ### Run the Docker version
-`   docker create -v  <path_to_config.js>/env_file:/app/.env:ro --link <mongoDB_container_name>:mongo --name="<container_name>" -p 3000:80 tmunzer/mist_snmp_gateway`
+`   docker create -v  <path_to_config.js>/env_file:/app/.env:ro --link <mongoDB_container_name>:mongo --name="<container_name>" -p 161:161 tmunzer/mist_snmp_gateway`
 
 ### Configure the Docker version
 Configuration can be done through the config file. An example of the `config.js` file can be found in `src/config_example.js`. Then, you just need to link the `config.js` file to `/app/config.js` in you container.

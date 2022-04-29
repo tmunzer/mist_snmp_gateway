@@ -8,7 +8,6 @@ COPY ./src /app/
 WORKDIR /app
 RUN npm install
 
-EXPOSE 161/tcp
 EXPOSE 161/udp
 ENTRYPOINT npm start
 

@@ -412,7 +412,7 @@ apName  OBJECT-TYPE
 apStatus  OBJECT-TYPE
     SYNTAX    INTEGER {
         disconnected (1),
-        connencted (2)
+        connected (2)
     }
     MAX-ACCESS read-only
     STATUS    current

@@ -30,25 +30,25 @@ Since this is just a proof of concept, the written MIB does not use a registered
 # Examples
 ## Org Information
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_cli.png"  width="49%"  />
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_nagios.png"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_cli.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_nagios.jpg"  width="49%"  />
 </div>
 
 ## Site Information
 **Note:** The SNMP Index is the site ID (e.g. `snmpget -v2c -cpublic <host>  .1.3.6.1.4.1.65535.2.1.1.2.\"<site_id>\"`)
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/site_cli.png"  width="49%"  />
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_table.png"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/site_cli.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_table.jpg"  width="49%"  />
 </div>
 
 ## AP Information
 **Note:** The SNMP Index is the site ID and the AP MAC address (e.g. `snmpget -v2c -cpublic <host>  .1.3.6.1.4.1.65535.2.1.1.2.\"<site_id>\".\"<mac>\"`)
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_cli.png"  width="49%"  />
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_table.png"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_cli.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_table.jpg"  width="49%"  />
 </div>
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_nagios.png"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_nagios.jpg"  width="49%"  />
 </div>
 
 

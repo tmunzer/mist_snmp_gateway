@@ -19,6 +19,7 @@ try {
         MIST_HOST: process.env.MIST_HOST || "api.mist.com",
         MIST_ORG_ID: process.env.MIST_ORG_ID || null,
         MIST_SITE_IDS: process.env.MIST_SITE_IDS || "",
+        MIST_SYNC_TIME: process.env.MIST_SYNC_TIME || 15,
         MONGO_HOST: process.env.MONGO_HOST || null,
         MONGO_DB: process.env.MONGO_DB || "snmp",
         MONGO_USER: process.env.MONGO_USER || null,
@@ -44,6 +45,7 @@ try {
     logger.info("MIST_HOST            : " + global.CONFIG.MIST_HOST);
     logger.info("MIST_ORG_ID          : " + global.CONFIG.MIST_ORG_ID);
     logger.info("MIST_SITE_IDS        : " + global.CONFIG.MIST_SITE_IDS);
+    logger.info("MIST_SYNC_TIME       : " + global.CONFIG.MIST_SYNC_TIME);
     logger.info("MONGO_HOST           : " + global.CONFIG.MONGO_HOST);
     logger.info("MONGO_DB             : " + global.CONFIG.MONGO_DB);
     logger.info("MONGO_USER           : " + global.CONFIG.MONGO_USER);
@@ -100,7 +102,7 @@ setTimeout(() => {
     sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, global.CONFIG.MIST_SITE_IDS, mist_snmp)
 }, 1000)
 
-cron.schedule('*/5 * * * *', () => {
-    console.log('running a task every minute');
+cron.schedule('*/' + global.CONFIG.MIST_SYNC_TIME + ' * * * *', () => {
+    console.log('running a task ' + global.CONFIG.MIST_SYNC_TIME + ' minute(s)');
     sync(global.CONFIG.MIST_HOST, global.CONFIG.MIST_TOKEN, global.CONFIG.MIST_ORG_ID, global.CONFIG.MIST_SITE_IDS, mist_snmp)
 });

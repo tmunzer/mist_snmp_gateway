@@ -143,9 +143,9 @@ function processOrg(host, token, org_id, agent) {
     Orgs.stats(host, token, org_id, (err, data) => {
         if (err) logger.error(err);
         else {
+            org.name = data.name;
             org.stats = {
                 last_updated: Date.now(),
-                name: data.name,
                 num_sites: data.num_sites,
                 num_devices: data.num_devices,
                 num_inventory: data.num_inventory,

@@ -77,7 +77,7 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                         }
                     }
                 })
-            else if (ids_to_do.ids_to_delete.length > 0)
+            if (ids_to_do.ids_to_delete.length > 0)
                 sites_from_db.forEach(site => {
                     if (ids_to_do.ids_to_delete.includes(site.id))
                         SiteModel.findOneAndDelete({ site_id: site.id }, (err) => {

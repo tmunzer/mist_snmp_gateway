@@ -31,10 +31,9 @@ function saveDevicesStats(site, devices_from_mist, device_type, model, agent) {
                         })
                     }
                 })
-            else if (ids_to_do.ids_to_delete.length > 0)
+            if (ids_to_do.ids_to_delete.length > 0)
                 devices_from_db.forEach(device => {
                     if (ids_to_do.ids_to_delete.includes(device.id)) {
-                        console.log(device)
                         model.findOneAndDelete({ site_id: device.site_id, id: device.id }, device, (err, res) => {
                             if (err) logger.error(err);
                             else agent.router(device_type, "remove", device)

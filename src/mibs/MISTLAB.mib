@@ -5,9 +5,11 @@ IMPORTS
     DisplayString
         FROM SNMPv2-TC
 ;
---
+
+
+--**********************************************************************
 -- Main Descritpion
---
+--**********************************************************************
 mistLab MODULE-IDENTITY
     LAST-UPDATED "202204140000Z"
     ORGANIZATION "Mist-Lab FR"
@@ -28,12 +30,10 @@ mistLab MODULE-IDENTITY
 
     ::= { enterprises 65535 }
 
---
+
+--**********************************************************************
 -- ORG STRUCTURE
---
-
-
-
+--**********************************************************************
 organization OBJECT IDENTIFIER ::= { mistLab 1 }
 
 orgName OBJECT-TYPE
@@ -191,11 +191,10 @@ sleCapacityOk OBJECT-TYPE
         "Number of user minutes reaching the Capacity SLE threshold"
     ::= { orgStats 17 }
 
---
+
+--**********************************************************************
 -- SITE STRUCTURE
---
-
-
+--**********************************************************************
 sites   OBJECT IDENTIFIER ::= { mistLab 2 }
 
 siteTable OBJECT-TYPE
@@ -228,8 +227,8 @@ SiteEntry    ::= SEQUENCE {
     gatewayCount        Integer32,
     gatewayConnected    Integer32,
     devicesCount        Integer32,
-    clientsCount        Integer32,
-    clientsConnected    Integer32
+    devicesConnected    Integer32,
+    clientsCount        Integer32
 }
 
 --siteIndex OBJECT-TYPE
@@ -336,11 +335,9 @@ clientsCount OBJECT-TYPE
     ::= { siteEntry 13 }
 
 
-
-
---
--- AP STRUCTURE
---
+--**********************************************************************
+-- AP STATS STRUCTURE
+--**********************************************************************
 ap   OBJECT IDENTIFIER ::= { mistLab 3 }
 
 apStatsTable    OBJECT-TYPE
@@ -363,51 +360,41 @@ apStatsEntry    OBJECT-TYPE
     ::= { apStatsTable 1 }
 
 ApStatsEntry   ::= SEQUENCE {
-    apMac          OCTET STRING,
-    apName         DisplayString,
-    apStatus       INTEGER,
-    apLastSeen     Integer32,
-    apUptime       Integer32,
-    apHardware     OCTET STRING,
-    apHardwareRev  OCTET STRING,
-    apSerial       OCTET STRING,
-    apIp           IpAddress,
-    apPublicIp     IpAddress,
-    apClientCount  Integer32,
-    apLldpSysName    OCTET STRING,
-    apLldpSysDesc    OCTET STRING,
-    apLldpPortId     OCTET STRING,
-    apLldpPortDesc   OCTET STRING,
-    apLldpChassisId  OCTET STRING,
-    apLldpMed        INTEGER,
-    apPwrReq         Integer32,
-    apPwrAlloc       Integer32,
-    apPwrDraw        Integer32
+    apMac               OCTET STRING,
+    apName              DisplayString,
+    apStatus            INTEGER,
+    apLastSeen          Integer32,
+    apUptime            Integer32,
+    apHardware          OCTET STRING,
+    apHardwareRev       OCTET STRING,
+    apSerial            OCTET STRING,
+    apIp                IpAddress,
+    apPublicIp          IpAddress,
+    apClientCount       Integer32,
+    apLldpSysName       OCTET STRING,
+    apLldpSysDesc       OCTET STRING,
+    apLldpPortId        OCTET STRING,
+    apLldpPortDesc      OCTET STRING,
+    apLldpChassisId     OCTET STRING,
+    apLldpMed           INTEGER,
+    apPwrReq            Integer32,
+    apPwrAlloc          Integer32,
+    apPwrDraw           Integer32
 }
 
 apMac  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..162))
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Access Point MAC Address"
+    DESCRIPTION "Access Point MAC Address"
     ::= { apStatsEntry 1 }
-
-apMac  OBJECT-TYPE
-    SYNTAX  OCTET STRING (SIZE(1..162))
-    MAX-ACCESS read-only
-    STATUS    current
-    DESCRIPTION
-        "Access Point MAC Address"
-    ::= { apStatsEntry 2 }
 
 apName  OBJECT-TYPE
     SYNTAX  DisplayString  (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Access Point Name"
-    ::= { apStatsEntry 3 }
+    DESCRIPTION "Access Point Name"
+    ::= { apStatsEntry 2 }
 
 apStatus  OBJECT-TYPE
     SYNTAX    INTEGER {
@@ -416,64 +403,57 @@ apStatus  OBJECT-TYPE
     }
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "The connection status of the AP with the Mist Cloud."
-    ::= { apStatsEntry 4 }
+    DESCRIPTION "The connection status of the AP with the Mist Cloud."
+    ::= { apStatsEntry 3 }
 
 apLastSeen OBJECT-TYPE
     SYNTAX    Integer32 (1..2147483647)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
-    ::= { apStatsEntry 5 }
+    ::= { apStatsEntry 4 }
 
 apUptime OBJECT-TYPE
     SYNTAX    Integer32 (1..2147483647)
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "The Access Point Uptime"
-    ::= { apStatsEntry 6 }
+    DESCRIPTION "The Access Point Uptime"
+    ::= { apStatsEntry 5 }
 
 apHardware  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..32))
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Access Point Hardware"
-    ::= { apStatsEntry 7 }
+    DESCRIPTION "Access Point Hardware"
+    ::= { apStatsEntry 6 }
 
 apHardwareRev  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..6))
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Access Point Hardware Revision"
-    ::= { apStatsEntry 8 }
+    DESCRIPTION "Access Point Hardware Revision"
+    ::= { apStatsEntry 7 }
     
 apSerial  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..16))
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Access Point Serial Number"
-    ::= { apStatsEntry 9 }
+    DESCRIPTION "Access Point Serial Number"
+    ::= { apStatsEntry 8 }
 
 apIp  OBJECT-TYPE
     SYNTAX  IpAddress
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Access Point IPv4 Address"
-    ::= { apStatsEntry 10 }
+    DESCRIPTION "Access Point IPv4 Address"
+    ::= { apStatsEntry 9 }
     
 apPublicIp  OBJECT-TYPE
     SYNTAX  IpAddress
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Access Point IPv4 Address"
-    ::= { apStatsEntry 11 }
+    DESCRIPTION "Access Point IPv4 Address"
+    ::= { apStatsEntry 10 }
 
 apClientCount  OBJECT-TYPE
     SYNTAX    Integer32
@@ -482,80 +462,78 @@ apClientCount  OBJECT-TYPE
     DESCRIPTION
         "Number of connected clients to the 
         Access Point"
-    ::= { apStatsEntry 12 }
+    ::= { apStatsEntry 11 }
 
-apEthLldpSysName OBJECT-TYPE
+apLldpSysName OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord System Name"
-    ::= { apStatsEntry 13 }
+    ::= { apStatsEntry 12 }
 
-apEthLldpSysDesc OBJECT-TYPE
+apLldpSysDesc OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord System Description"
-    ::= { apStatsEntry 14 }
+    ::= { apStatsEntry 13 }
 
-apEthLldpPortId  OBJECT-TYPE
+apLldpPortId  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord Port Id"
-    ::= { apStatsEntry 15 }
+    ::= { apStatsEntry 14 }
 
-apEthLldpPortDesc  OBJECT-TYPE
+apLldpPortDesc  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord Port Description"
-    ::= { apStatsEntry 16 }
+    ::= { apStatsEntry 15 }
     
-apEthLldpChassisId  OBJECT-TYPE
+apLldpChassisId  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..16))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord Chassis ID"
-    ::= { apStatsEntry 17 }
+    ::= { apStatsEntry 16 }
 
-apEthLldpMed  OBJECT-TYPE
+apLldpMed  OBJECT-TYPE
     SYNTAX    INTEGER {
-        False (1),
-        True (2)
+        false (1),
+        true (2)
     }
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "LLDP-MED supported by the LLDP Neighbord switch port"
-    ::= { apStatsEntry 18 }
+    DESCRIPTION "LLDP-MED supported by the LLDP Neighbord switch port"
+    ::= { apStatsEntry 17 }
     
-apEthPwrReq  OBJECT-TYPE
+apPwrReq  OBJECT-TYPE
     SYNTAX  Integer32
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Power requested by the AP interface"
+    DESCRIPTION "Power requested by the AP interface"
+    ::= { apStatsEntry 18 }
+
+apPwrAlloc  OBJECT-TYPE
+    SYNTAX    Integer32
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Power allocated by the PSE"
     ::= { apStatsEntry 19 }
 
-apEthPwrAlloc  OBJECT-TYPE
+apPwrDraw  OBJECT-TYPE
     SYNTAX    Integer32
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "Power allocated by the PSE"
+    DESCRIPTION "Power drawed by the AP interface"
     ::= { apStatsEntry 20 }
 
-apEthPwrDraw  OBJECT-TYPE
-    SYNTAX    Integer32
-    MAX-ACCESS read-only
-    STATUS    current
-    DESCRIPTION
-        "Power drawed by the AP interface"
-    ::= { apStatsEntry 21 }
 
---
-
+--**********************************************************************
+-- AP ETH STRUCTURE
+--**********************************************************************
 
 apEthTable    OBJECT-TYPE
     SYNTAX SEQUENCE OF ApEthEntry
@@ -579,16 +557,15 @@ apEthEntry    OBJECT-TYPE
 ApEthEntry   ::= SEQUENCE {
     apEthPort           OCTET STRING,
     apEthStatus         INTEGER,
-    apEthSpeed          INTEGER,
-    apEthDuplex         INTEGER,
+    apEthSpeed          Integer32,
+    apEthDuplex         INTEGER
 }
 
 apEthPort  OBJECT-TYPE
     SYNTAX  OCTET STRING (SIZE(1..4))
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "AP Interface Name"
+    DESCRIPTION "AP Interface Name"
     ::= { apEthEntry 1 }
 
 apEthStatus  OBJECT-TYPE
@@ -598,36 +575,299 @@ apEthStatus  OBJECT-TYPE
     }
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "AP Inteface Status"
+    DESCRIPTION "AP Inteface Status"
     ::= { apEthEntry 2 }
 
 apEthSpeed  OBJECT-TYPE
-    SYNTAX    INTEGER {
-        0 (1),
-        10 (2),
-        100 (3),
-        1000 (4),
-        2500 (5),
-        5000 (6),
-    }
+    SYNTAX    Integer32 
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "AP Interface Speed"
+    DESCRIPTION "AP Interface Speed"
     ::= { apEthEntry 3 }
 
 apEthDuplex OBJECT-TYPE
     SYNTAX    INTEGER {
         half (1),
-        full (2),
+        full (2)
     }
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION
-        "AP Interface Duplex"
+    DESCRIPTION "AP Interface Duplex"
     ::= { apEthEntry 4 }
 
+
+--**********************************************************************
+-- SWITCH STRUCTURE
+--**********************************************************************
+switch   OBJECT IDENTIFIER ::= { mistLab 4 }
+
+switchStatsTable    OBJECT-TYPE
+    SYNTAX SEQUENCE OF SwitchStatsEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        mist access points status table"
+    ::= { switch 1 }
+
+switchStatsEntry    OBJECT-TYPE
+    SYNTAX    SwitchStatsEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        mist access points status entry"
+    INDEX  { siteId,switchFpc0Mac,switchFpcIdx }
+    ::= { switchStatsTable 1 }
+
+SwitchStatsEntry   ::= SEQUENCE {
+    switchFpc0Mac           OCTET STRING,
+    switchFpcIdx            Integer32,
+    switchName              DisplayString,
+    switchIp                IpAddress,
+    switchStatus            INTEGER,
+    switchLastSeen          Integer32,
+
+    switchMac               OCTET STRING,
+    switchSerial            OCTET STRING,
+    switchVcRole            INTEGER,
+    switchModel             OCTET STRING,
+    switchUptime            Integer32,
+    switchVersion           OCTET STRING,
+    switchPoeMax            OCTET STRING,
+    switchPoeDraw           OCTET STRING,
+    switchFanOStatus        INTEGER,
+    switchFan1Status        INTEGER,
+    switchTempCpu           Integer32,
+    switchTempCpuStatus     INTEGER,
+    switchTempPsu           Integer32,
+    switchTempPsuStatus     INTEGER,
+    switchPsu0Status        INTEGER,
+    switchPsu1Status        INTEGER,
+    switchCpuLoad1          Integer32,
+    switchCpuLoad5          Integer32,
+    switchCpuLoad15         Integer32,
+    switchMemoryUsage       Integer32
+}
+
+switchFpc0Mac  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..162))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Switch/Virtual chassis FPC0 MAC address"
+    ::= { switchStatsEntry 1 }
+
+switchFpcIdx OBJECT-TYPE
+    SYNTAX    Integer32 (1..2147483647)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Switch/Virtual chassis FPC Index"
+    ::= { switchStatsEntry 2 }
+
+switchName  OBJECT-TYPE
+    SYNTAX  DisplayString  (SIZE(1..255))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Name"
+    ::= { switchStatsEntry 3 }
+
+switchIp  OBJECT-TYPE
+    SYNTAX  IpAddress
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch IPv4 Address"
+    ::= { switchStatsEntry 4 }
+
+switchStatus  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        disconnected (1),
+        connected (2)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "The connection status of the Switch with the Mist Cloud."
+    ::= { switchStatsEntry 5 }
+
+switchLastSeen OBJECT-TYPE
+    SYNTAX    Integer32 (1..2147483647)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "The last time the Switch contacted the Mist Cloud"
+    ::= { switchStatsEntry 6 }
+
+
+
+
+switchMac  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..162))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch/VC Member MAC Address"
+    ::= { switchStatsEntry 7 }
+
+switchSerial  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..16))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Serial Number"
+    ::= { switchStatsEntry 8 }
+
+switchVcRole  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        master (1),
+        backup (2),
+        linecard (3),
+        unknown (4)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch role in the Virtual Chassis"
+    ::= { switchStatsEntry 9 }
+
+switchModel  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..32))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Model of the switch"
+    ::= { switchStatsEntry 10 }
+
+switchUptime OBJECT-TYPE
+    SYNTAX    Integer32 (1..2147483647)
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Uptime"
+    ::= { switchStatsEntry 11 }
+
+switchVersion  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..32))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Running firmware on the switch"
+    ::= { switchStatsEntry 12 }
+    
+switchPoeMax  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..32))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Chassis PoE budget (in W) "
+    ::= { switchStatsEntry 13 }
+
+switchPoeDraw  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..32))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Current Chassis PoE draw (in W) "
+    ::= { switchStatsEntry 14 }
+
+switchFanOStatus OBJECT-TYPE
+    SYNTAX    INTEGER {
+        unknown (1),
+        error (2),
+        ok (3)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Chassis Fan 0 status"
+    ::= { switchStatsEntry 15 }
+
+switchFan1Status OBJECT-TYPE
+    SYNTAX    INTEGER {
+        unknown (1),
+        error (2),
+        ok (3)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Chassis Fan 1 status"
+    ::= { switchStatsEntry 16 }
+
+switchTempCpu OBJECT-TYPE
+    SYNTAX    Integer32 (1..200)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Chassis CPU Temperature (in Celcius)"
+    ::= { switchStatsEntry 17 }
+
+switchTempCpuStatus  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        unknown (1),
+        error (2),
+        ok (3)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Chassis CPU temperature status"
+    ::= { switchStatsEntry 18 }
+
+switchTempPsu OBJECT-TYPE
+    SYNTAX    Integer32 (1..200)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Chassis PSU Temperature (in Celcius)"
+    ::= { switchStatsEntry 19 }
+
+switchTempPsuStatus  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        unknown (1),
+        error (2),
+        ok (3)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Chassis PSU temperature status"
+    ::= { switchStatsEntry 20 }
+
+switchPsu0Status  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        unknown (1),
+        error (2),
+        ok (3)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Chassis PSU0 status"
+    ::= { switchStatsEntry 21 }
+
+switchPsu1Status  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        unknown (1),
+        error (2),
+        ok (3)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Chassis PSU1 status"
+    ::= { switchStatsEntry 22 }
+
+switchCpuLoad1  OBJECT-TYPE
+    SYNTAX    Integer32 (1..10)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Switch CPU Load - 1m"
+    ::= { switchStatsEntry 23 }
+    
+switchCpuLoad5  OBJECT-TYPE
+    SYNTAX    Integer32 (1..10)
+    MAX-ACCESS read-only
+    STATUS current
+    DESCRIPTION "Switch CPU Load - 5m"
+    ::= { switchStatsEntry 24 }
+
+switchCpuLoad15  OBJECT-TYPE
+    SYNTAX    Integer32 (1..10)
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch CPU Load - 15m"
+    ::= { switchStatsEntry 25 }
+    
+switchMemoryUsage  OBJECT-TYPE
+    SYNTAX    Integer32 (1..100)
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION
+        "Switch Memory usage (%)"
+    ::= { switchStatsEntry 26 }
 
 
 END

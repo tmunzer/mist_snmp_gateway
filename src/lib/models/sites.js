@@ -7,15 +7,15 @@ const SiteSchema = new mongoose.Schema({
     name: String,
     country_code: String,
     address: String,
-    num_ap: Number,
-    num_ap_connected: Number,
-    num_switch: Number,
-    num_switch_connected: Number,
-    num_gateway: Number,
-    num_gateway_connected: Number,
-    num_devices: Number,
-    num_clients: Number,
-    num_devices_connected: Number
+    num_ap: { type: Number, default: 0 },
+    num_ap_connected: { type: Number, default: 0 },
+    num_switch: { type: Number, default: 0 },
+    num_switch_connected: { type: Number, default: 0 },
+    num_gateway: { type: Number, default: 0 },
+    num_gateway_connected: { type: Number, default: 0 },
+    num_devices: { type: Number, default: 0 },
+    num_clients: { type: Number, default: 0 },
+    num_devices_connected: { type: Number, default: 0 }
 });
 
 

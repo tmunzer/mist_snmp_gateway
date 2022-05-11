@@ -216,7 +216,6 @@ siteEntry    OBJECT-TYPE
     ::= { siteTable 1 }
 
 SiteEntry    ::= SEQUENCE {
-    siteId              OCTET STRING,
     siteName            OCTET STRING,
     siteCountry         OCTET STRING,
     siteAddress         OCTET STRING,
@@ -231,13 +230,6 @@ SiteEntry    ::= SEQUENCE {
     clientsCount        Integer32
 }
 
---siteIndex OBJECT-TYPE
---    SYNTAX    Integer32 (1..2147483647)
---    MAX-ACCESS not-accessible
---    STATUS    current
---    DESCRIPTION
---        "The site index in the snmp table"
---    ::= { siteEntry 1 }
 
 siteId  OBJECT-TYPE
     SYNTAX  OCTET STRING  (SIZE(1..37))

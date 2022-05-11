@@ -58,7 +58,7 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                                 SiteModel(stats).save((err, res) => {
                                     if (err) logger.error(err);
                                     else {
-                                        agent.add_site(site);
+                                        agent.add_site(stats);
                                         syncSiteDevices(host, token, site, agent)
                                     }
                                 })
@@ -69,7 +69,7 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                                 SiteModel.findOneAndUpdate({ id: site.id }, stats, (err, res) => {
                                     if (err) logger.error(err);
                                     else {
-                                        agent.update_site(site);
+                                        agent.update_site(stats);
                                         syncSiteDevices(host, token, site, agent)
                                     }
                                 })

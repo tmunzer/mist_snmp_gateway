@@ -623,10 +623,11 @@ switchStatsEntry    OBJECT-TYPE
 SwitchStatsEntry   ::= SEQUENCE {
     switchFpc0Mac           OCTET STRING,
     switchFpcIdx            Integer32,
+
     switchName              DisplayString,
-    switchIp                IpAddress,
     switchStatus            INTEGER,
     switchLastSeen          Integer32,
+    switchIp                IpAddress,
 
     switchMac               OCTET STRING,
     switchSerial            OCTET STRING,
@@ -662,22 +663,15 @@ switchFpcIdx OBJECT-TYPE
     SYNTAX    Integer32 (1..2147483647)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "Switch/Virtual chassis FPC Index"
+    DESCRIPTION "Switch member ID in the Virtual chassis FPC Index"
     ::= { switchStatsEntry 2 }
 
 switchName  OBJECT-TYPE
     SYNTAX  DisplayString  (SIZE(1..255))
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION "Switch Name"
+    DESCRIPTION "Switch/Virtual Chassis Name"
     ::= { switchStatsEntry 3 }
-
-switchIp  OBJECT-TYPE
-    SYNTAX  IpAddress
-    MAX-ACCESS read-only
-    STATUS    current
-    DESCRIPTION "Switch IPv4 Address"
-    ::= { switchStatsEntry 4 }
 
 switchStatus  OBJECT-TYPE
     SYNTAX    INTEGER {
@@ -686,14 +680,21 @@ switchStatus  OBJECT-TYPE
     }
     MAX-ACCESS read-only
     STATUS    current
-    DESCRIPTION "The connection status of the Switch with the Mist Cloud."
-    ::= { switchStatsEntry 5 }
+    DESCRIPTION "The connection status of the Switch/Virtual Chassis with the Mist Cloud."
+    ::= { switchStatsEntry 4 }
 
 switchLastSeen OBJECT-TYPE
     SYNTAX    Integer32 (1..2147483647)
     MAX-ACCESS read-only
     STATUS current
-    DESCRIPTION "The last time the Switch contacted the Mist Cloud"
+    DESCRIPTION "The last time the Switch/Virtual Chassis contacted the Mist Cloud"
+    ::= { switchStatsEntry 5 }
+
+switchIp  OBJECT-TYPE
+    SYNTAX  IpAddress
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch/Virtual Chassis IPv4 Address"
     ::= { switchStatsEntry 6 }
 
 
@@ -715,10 +716,10 @@ switchSerial  OBJECT-TYPE
 
 switchVcRole  OBJECT-TYPE
     SYNTAX    INTEGER {
-        master (1),
-        backup (2),
-        linecard (3),
-        unknown (4)
+        unknown (1),
+        master (2),
+        backup (3),
+        linecard (4)
     }
     MAX-ACCESS read-only
     STATUS    current

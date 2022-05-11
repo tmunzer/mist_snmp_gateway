@@ -1,68 +1,16 @@
 const logger = require("./logger");
-const ApStatModel = require("./models/apStats");
 const SiteModel = require("./models/sites");
 const OrgModel = require("./models/org");
 const Orgs = require("./orgs");
 const Sites = require("./sites");
-const Devices = require("./devices");
+const processIds = require("./common").processIds;
+const SyncDevices = require("./mist_sync_devices");
 
 
-function process_ids(list_from_db, list_from_mist) {
-    var ids_from_db = [];
-    var ids_from_mist = [];
-    list_from_db.forEach(obj => ids_from_db.push(obj.id));
-    list_from_mist.forEach(obj => ids_from_mist.push(obj.id));
-    const ids_to_add = ids_from_mist.filter(x => !ids_from_db.includes(x));
-    const ids_to_update = ids_from_mist.filter(x => ids_from_db.includes(x));
-    const ids_to_delete = ids_from_db.filter(x => !ids_from_mist.includes(x));
-    return { ids_to_add: ids_to_add, ids_to_update: ids_to_update, ids_to_delete: ids_to_delete }
-}
 
-
-function saveDevicesStats(site, devices_from_mist, agent) {
-    ApStatModel.find({ site_id: site.id })
-        .sort({ index: -1 })
-        .exec((err, devices_from_db) => {
-            if (err) cb(err);
-            var index = 0;
-            if (devices_from_db.length > 0) index = devices_from_db[0].index;
-            const ids_to_do = process_ids(devices_from_db, devices_from_mist)
-            if (ids_to_do.ids_to_add.length > 0 || ids_to_do.ids_to_update.length > 0)
-                devices_from_mist.forEach(device => {
-                    if (ids_to_do.ids_to_add.includes(device.id)) {
-                        index += 1;
-                        device.index = index;
-                        device.last_updated = Date.now()
-                        ApStatModel(device).save((err, res) => {
-                            if (err) logger.error(err);
-                            else agent.add_ap(res)
-                        })
-                    } else if (ids_to_do.ids_to_update.includes(device.id)) {
-                        device.last_updated = Date.now()
-                        ApStatModel.findOneAndUpdate({ site_id: device.site_id, id: device.id }, device, (err, res) => {
-                            if (err) logger.error(err);
-                            else agent.update_ap(res)
-                        })
-                    }
-                })
-            else if (ids_to_do.ids_to_delete.length > 0)
-                devices_from_db.forEach(device => {
-                    if (ids_to_do.ids_to_delete.includes(device.id))
-                        ApStatModel.findOneAndDelete({ site_id: device.site_id, id: device.id }, device, (err, res) => {
-                            if (err) logger.error(err);
-                            else agent.delete_ap(res)
-                        })
-                })
-        })
-}
-
-function checkApStatModel(host, token, site, new_site, agent) {
-    Devices.stats(host, token, site.id, "ap", (err, devices) => {
-        if (err) logger.error(err);
-        if (new_site) agent.add_site(site);
-        else agent.update_site(site);
-        saveDevicesStats(site, devices, agent)
-    })
+function syncSiteDevices(host, token, site, agent) {
+    SyncDevices.ap(host, token, site, agent);
+    SyncDevices.switch(host, token, site, agent);
 }
 
 
@@ -98,7 +46,7 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
             if (err) cb(err);
             var index = 0;
             if (sites_from_db.length > 0) index = sites_from_db[0].index;
-            const ids_to_do = process_ids(sites_from_db, sites_from_mist)
+            const ids_to_do = processIds(sites_from_db, sites_from_mist)
             if (ids_to_do.ids_to_add.length > 0 || ids_to_do.ids_to_update.length > 0)
                 sites_from_mist.forEach(site => {
                     if (site_ids.length == 0 || site_ids.includes(site.id)) {
@@ -109,7 +57,10 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                                 stats.last_updated = Date.now();
                                 SiteModel(stats).save((err, res) => {
                                     if (err) logger.error(err);
-                                    else checkApStatModel(host, token, res, true, agent);
+                                    else {
+                                        agent.add_site(site);
+                                        syncSiteDevices(host, token, site, agent)
+                                    }
                                 })
                             })
                         } else if (ids_to_do.ids_to_update.includes(site.id)) {
@@ -117,7 +68,10 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                                 stats.last_updated = Date.now();
                                 SiteModel.findOneAndUpdate({ id: site.id }, stats, (err, res) => {
                                     if (err) logger.error(err);
-                                    else checkApStatModel(host, token, res, false, agent);
+                                    else {
+                                        agent.update_site(site);
+                                        syncSiteDevices(host, token, site, agent)
+                                    }
                                 })
                             })
                         }
@@ -128,7 +82,7 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                     if (ids_to_do.ids_to_delete.includes(site.id))
                         SiteModel.findOneAndDelete({ site_id: site.id }, (err) => {
                             if (err) logger.error(err);
-                            else agent.delete_ap(res)
+                            else agent.remove_site(res)
                         })
                 })
         })

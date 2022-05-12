@@ -652,7 +652,7 @@ switchFpc0Mac  OBJECT-TYPE
     ::= { switchStatsEntry 1 }
 
 switchFpcIdx OBJECT-TYPE
-    SYNTAX    Integer32 (1..2147483647)
+    SYNTAX    Integer32 (0..10)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "Switch member ID in the Virtual chassis FPC Index"

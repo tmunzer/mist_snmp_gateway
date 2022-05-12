@@ -45,21 +45,21 @@ Since this is just a proof of concept, the written MIB does not use a registered
 ## AP Stats
 **Note:** The SNMP Index is the site ID and the AP MAC address (e.g. `snmpget -v2c -cpublic <host>  .1.3.6.1.4.1.65535.2.1.1.2.\"<site_id>\".\"<mac>\"`)
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_cli.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_icinga.jpg"  width="49%"  />
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_table.jpg"  width="49%"  />
 </div>
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_icinga.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_cli.jpg"  width="49%"  />
 </div>
 
 ## Switches Stats
 **Note:** The SNMP Index is the site ID and the AP MAC address (e.g. `snmpget -v2c -cpublic <host>  MISTLAB-MIB::switchName.\"<site_id>\".\"<mac>\".<fpcId>`)
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_cli.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_icinga.jpg"  width="49%"  />
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_table.jpg"  width="49%"  />
 </div>
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_icinga.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_cli.jpg"  width="49%"  />
 </div>
 # Install
 This Reference Application can be used as a standalone Application, or it can be deployed as a Docker Image (recommanded).

@@ -18,7 +18,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 * Synchronises statistics data from a Mist Organisation:
   * Mist Org Stats
   * Mist Sites Stats
-  * Mist APs Stats
+  * APs Stats
+  * Switches Stats
 * Runs SNMP server to expose statistics through SNMP
 
 **Note:** 
@@ -28,30 +29,38 @@ A custom SNMP MIB has been written for this purpose. It can be found [here](http
 Since this is just a proof of concept, the written MIB does not use a registered Private Enterprise Number (PEN). The enterprise OID has been randomly selected (OID .1.3.6.1.4.1.65535) and may interfer with other SNMP solutions. If it's the case, please update the `SNMP_OID` env variable, and the `enterprises` OID in the MIB file.
 
 # Examples
-## Org Information
+## Org Stats
 <div>
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_cli.jpg"  width="49%"  />
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_nagios.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_icinga.jpg"  width="49%"  />
 </div>
 
-## Site Information
+## Site Stats
 **Note:** The SNMP Index is the site ID (e.g. `snmpget -v2c -cpublic <host>  .1.3.6.1.4.1.65535.2.1.1.2.\"<site_id>\"`)
 <div>
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/site_cli.jpg"  width="49%"  />
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_nagios.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_icinga.jpg"  width="49%"  />
 </div>
 
-## AP Information
+## AP Stats
 **Note:** The SNMP Index is the site ID and the AP MAC address (e.g. `snmpget -v2c -cpublic <host>  .1.3.6.1.4.1.65535.2.1.1.2.\"<site_id>\".\"<mac>\"`)
 <div>
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_cli.jpg"  width="49%"  />
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_table.jpg"  width="49%"  />
 </div>
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_nagios.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/ap_icinga.jpg"  width="49%"  />
 </div>
 
-
+## Switches Stats
+**Note:** The SNMP Index is the site ID and the AP MAC address (e.g. `snmpget -v2c -cpublic <host>  MISTLAB-MIB::switchName.\"<site_id>\".\"<mac>\".<fpcId>`)
+<div>
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_cli.jpg"  width="49%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_table.jpg"  width="49%"  />
+</div>
+<div>
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_icinga.jpg"  width="49%"  />
+</div>
 # Install
 This Reference Application can be used as a standalone Application, or it can be deployed as a Docker Image (recommanded).
 

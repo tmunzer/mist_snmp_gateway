@@ -637,9 +637,9 @@ SwitchStatsEntry   ::= SEQUENCE {
     switchTempPsuStatus     INTEGER,
     switchPsu0Status        INTEGER,
     switchPsu1Status        INTEGER,
-    switchCpuLoad1          Integer32,
-    switchCpuLoad5          Integer32,
-    switchCpuLoad15         Integer32,
+    switchCpuLoad1          OCTET STRING,
+    switchCpuLoad5          OCTET STRING,
+    switchCpuLoad15         OCTET STRING,
     switchMemoryUsage       Integer32
 }
 
@@ -834,21 +834,21 @@ switchPsu1Status  OBJECT-TYPE
     ::= { switchStatsEntry 22 }
 
 switchCpuLoad1  OBJECT-TYPE
-    SYNTAX    Integer32 (1..10)
+    SYNTAX  OCTET STRING (SIZE(1..5))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "Switch CPU Load - 1m"
     ::= { switchStatsEntry 23 }
     
 switchCpuLoad5  OBJECT-TYPE
-    SYNTAX    Integer32 (1..10)
+    SYNTAX  OCTET STRING (SIZE(1..5))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "Switch CPU Load - 5m"
     ::= { switchStatsEntry 24 }
 
 switchCpuLoad15  OBJECT-TYPE
-    SYNTAX    Integer32 (1..10)
+    SYNTAX  OCTET STRING (SIZE(1..5))
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION "Switch CPU Load - 15m"

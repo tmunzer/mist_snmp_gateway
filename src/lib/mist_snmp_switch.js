@@ -97,9 +97,9 @@ function add_switch_stats(mib, sw) {
             temperatures.psu.status,
             psus[0],
             psus[1],
-            member.cpu_stat.load_avg[0],
-            member.cpu_stat.load_avg[1],
-            member.cpu_stat.load_avg[2],
+            String(member.cpu_stat.load_avg[0]),
+            String(member.cpu_stat.load_avg[1]),
+            String(member.cpu_stat.load_avg[2]),
             member.memory_stat.usage
         ]);
     });

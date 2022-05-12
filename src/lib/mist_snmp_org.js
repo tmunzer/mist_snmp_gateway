@@ -10,7 +10,7 @@ function update_org(mib, org) {
             org.stats.sle[sle] = { total: 0, ok: 0 }
         }
         if (org.stats.sle[sle].total > 0) percent[sle] = (org.stats.sle[sle].ok / org.stats.sle[sle].total) * 100
-        else percent[sle] = 0;
+        else percent[sle] = -1;
     })
 
     mib.setScalarValue('orgName', org.name)

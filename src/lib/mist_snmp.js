@@ -42,7 +42,7 @@ class Agent {
         //this.agent = snmp.createAgent({ disableAuthorization: true }, function(error, data) {});
         this.agent = snmp.createAgent(options, function(err, data) {
             if (err) logger.error(err)
-            if (data) logger.notice('SNMP Agent sent a response for the oid ' + data.pdu.varbinds[0].oid + ' from ' + data.rinfo.address);
+            if (data) logger.debug('SNMP Agent sent a response for the oid ' + data.pdu.varbinds[0].oid + ' from ' + data.rinfo.address);
         });
 
 

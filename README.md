@@ -60,7 +60,8 @@ Since this is just a proof of concept, the written MIB does not use a registered
 <div>
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/switch_table.jpg"  width="75%"  />
 </div>
-# Install
+
+# Installation
 This Reference Application can be used as a standalone Application, or it can be deployed as a Docker Image (recommanded).
 
 ## Deploy the Docker version (recommanded)

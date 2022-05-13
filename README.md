@@ -3,7 +3,7 @@ This application is a gateway to provide Mist Cloud information through SNMP. Th
 
 This is just a proof of concept/example, and only a few information are exposed. It can be extended to provide more information.
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/snmp.png"  width="75%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/snmp.png"  width="100%"  />
 </div>
 
 # MIT LICENSE

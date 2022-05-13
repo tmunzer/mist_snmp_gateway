@@ -31,7 +31,7 @@ Since this is just a proof of concept, the written MIB does not use a registered
 # Examples
 ## Org Stats
 <div>
-<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_cli.jpg"  width="75%"  />
+<img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/org_icinga.jpg"  width="75%"  />
 </div>
 
 ## Site Stats

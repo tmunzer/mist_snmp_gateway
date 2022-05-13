@@ -31,10 +31,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   * Switches Stats
 * Runs SNMP server to expose statistics through SNMP
 
-#### Note:
+#### Note
 A custom SNMP MIB has been written for this purpose. It can be found [here](https://github.com/tmunzer/mist_snmp_gateway/blob/main/src/mibs/MISTLAB.mib)
 
-#### Note 2:
+#### Note 2
 Since this is just a proof of concept, the written MIB does not use a registered Private Enterprise Number (PEN). The enterprise OID has been randomly selected (OID .1.3.6.1.4.1.65535) and may interfer with other SNMP solutions. If it's the case, please update the `SNMP_OID` env variable, and the `enterprises` OID in the MIB file.
 
 # Examples

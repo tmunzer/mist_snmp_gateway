@@ -6,6 +6,12 @@ This is just a proof of concept/example, and only a few information are exposed.
 <img src="https://github.com/tmunzer/mist_snmp_gateway/raw/main/._readme/img/snmp.png"  width="100%"  />
 </div>
 
+# Menu
+* [License](#MIT%20LICENSE)
+* [Features](#Features)
+* [Examples](#Examples)
+* [Installation](#Installation)
+
 # MIT LICENSE
 
 Copyright (c) 2022 Thomas Munzer
@@ -25,10 +31,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   * Switches Stats
 * Runs SNMP server to expose statistics through SNMP
 
-**Note:** 
+#### Note:
 A custom SNMP MIB has been written for this purpose. It can be found [here](https://github.com/tmunzer/mist_snmp_gateway/blob/main/src/mibs/MISTLAB.mib)
 
-**Note 2:**
+#### Note 2:
 Since this is just a proof of concept, the written MIB does not use a registered Private Enterprise Number (PEN). The enterprise OID has been randomly selected (OID .1.3.6.1.4.1.65535) and may interfer with other SNMP solutions. If it's the case, please update the `SNMP_OID` env variable, and the `enterprises` OID in the MIB file.
 
 # Examples
@@ -99,7 +105,7 @@ SNMP_V3_AUTH_KEY | string | null | if `SNMP_VERSION`==`3`, SNMP Authentication K
 SNMP_V3_PRIV_PROTOCOL | string | AES | if `SNMP_VERSION`==`3`, encryption protocol (`AES` or `DES`) | 
 SNMP_V3_PRIV_KEY | string | null | if `SNMP_VERSION`==`3`, SNMP Encryption Key | 
 SNMP_LISTENING_IP | string | null |  IP address to bind to - default to null, which means bind to all IP addresses | 
-SNMP_OID | integer | 65535 | Enterprise OID to use (see **Note 2** above)|
+SNMP_OID | integer | 65535 | Enterprise OID to use (see [Note 2]("#Note%202") above)|
 
 
 

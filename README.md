@@ -76,7 +76,16 @@ This application is available as a [Docker Image](https://hub.docker.com/reposit
 The Docker Image exposes the following ports:
 * UDP161
 
-### Run the Docker version
+### Run with Docker Compose
+A docker-compose file is available to deploy the App. 
+
+*Before starting*, please configure the environment variables with your values! It is recommanded to customize the Mongo User/Password. To do so, make sure to use the same values for `MONGO_INITDB_ROOT_USERNAME` and `MONGO_USER`, and for `MONGO_INITDB_ROOT_PASSWORD` and `MONGO_PASSWORD`.
+
+To start it, you must have docker installed, and run the command `docker-compose up` from the folder where `docker-compose.yaml` is located.
+
+*Hint:* You can use the command `docker-compose up -d` to start it in background, and `docker-compose down` to stop it.
+
+### Manually Run the Docker version
 `   docker create -v  <path_to_config.js>/env_file:/app/.env:ro --link <mongoDB_container_name>:mongo --name="<container_name>" -p 161:161 tmunzer/mist_snmp_gateway`
 
 ### Configure the Docker version

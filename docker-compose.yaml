@@ -1,0 +1,38 @@
+version: '3'
+services:    
+  snmp-db:
+    image: mongo
+    container_name: "snmp-db"
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - /tmp/mongo:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "secretDbPassword"
+
+  snmp-gw: 
+    image: "tmunzer/mist_snmp_gateway"
+    container_name: "snmp-gw"
+    restart: always
+    ports:
+      - "161:161/udp"
+    depends_on: 
+      - snmp-db
+    environment:
+      MIST_TOKEN: ## TO CONFIGURE
+      MIST_HOST: ## TO CONFIGURE
+      MIST_ORG_ID: ## TO CONFIGURE
+      MIST_SITE_IDS: ## TO CONFIGURE
+      MONGO_HOST: "snmp-db"
+      MONGO_DB: "snmp"
+      MONGO_USER: "root"
+      MONGO_PASSWORD: "secretDbPassword"
+      SNMP_VERSION:  ## TO CONFIGURE IF SNMP_VERSION = 2, ELSE TO REMOVE 
+      SNMP_V2C_COMMUNITY:  ## TO CONFIGURE IF SNMP_VERSION = 2, ELSE TO REMOVE 
+      SNMP_V3_USER:  ## TO CONFIGURE IF SNMP_VERSION = 3, ELSE TO REMOVE 
+      SNMP_V3_AUTH_PROTOCOL: ## TO CONFIGURE IF SNMP_VERSION = 3, ELSE TO REMOVE 
+      SNMP_V3_AUTH_KEY: ## TO CONFIGURE IF SNMP_VERSION = 3, ELSE TO REMOVE 
+      SNMP_V3_PRIV_PROTOCOL: ## TO CONFIGURE IF SNMP_VERSION = 3, ELSE TO REMOVE 
+      SNMP_V3_PRIV_KEY: ## TO CONFIGURE IF SNMP_VERSION = 3, ELSE TO REMOVE 

@@ -119,7 +119,7 @@ SNMP_OID | integer | 65535 | Enterprise OID to use (see [Note 2](#note-2) above)
 
 
 ## Deploy the Standalone Application
-This Reference APP is built over NodeJS. 
+This Reference APP is built over NodeJS. You must have a [MongoDB](https://www.mongodb.com/try/download/community) server accessible from the AP to get it working.
 
 ### Deploy the Application
 * Install NodeJS LTS: https://nodejs.org/en/download/.

@@ -505,35 +505,35 @@ apClientCount  OBJECT-TYPE
     ::= { apStatsEntry 11 }
 
 apLldpSysName OBJECT-TYPE
-    SYNTAX  OCTET STRING (SIZE(1..255))
+    SYNTAX  OCTET STRING (SIZE(0..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord System Name"
     ::= { apStatsEntry 12 }
 
 apLldpSysDesc OBJECT-TYPE
-    SYNTAX  OCTET STRING (SIZE(1..255))
+    SYNTAX  OCTET STRING (SIZE(0..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord System Description"
     ::= { apStatsEntry 13 }
 
 apLldpPortId  OBJECT-TYPE
-    SYNTAX  OCTET STRING (SIZE(1..255))
+    SYNTAX  OCTET STRING (SIZE(0..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord Port Id"
     ::= { apStatsEntry 14 }
 
 apLldpPortDesc  OBJECT-TYPE
-    SYNTAX  OCTET STRING (SIZE(1..255))
+    SYNTAX  OCTET STRING (SIZE(0..255))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord Port Description"
     ::= { apStatsEntry 15 }
     
 apLldpChassisId  OBJECT-TYPE
-    SYNTAX  OCTET STRING (SIZE(1..16))
+    SYNTAX  OCTET STRING (SIZE(0..16))
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "LLDP Neighbord Chassis ID"

@@ -25,29 +25,31 @@ function add_ap_stats(mib, ap) {
     if (ap.name) name = ap.name;
     var lldp_med = 1;
     if (ap.lldp_stat.lldp_med_supported) lldp_med = 2;
-    mib.addTableRow('apStatsEntry', [
-        ap.site_id,
-        ap.mac,
-        name,
-        status,
-        ap.last_seen,
-        ap.uptime,
-        ap.model,
-        ap.hw_rev,
-        ap.serial,
-        ap.ip,
-        ap.ext_ip,
-        ap.num_clients,
-        ap.lldp_stat.system_name,
-        ap.lldp_stat.system_desc,
-        ap.lldp_stat.port_id,
-        ap.lldp_stat.port_desc,
-        ap.lldp_stat.chassis_id,
-        lldp_med,
-        ap.lldp_stat.power_requested,
-        ap.lldp_stat.power_allocated,
-        ap.lldp_stat.power_draw
-    ]);
+    if (ap.last_seen) {
+        mib.addTableRow('apStatsEntry', [
+            ap.site_id,
+            ap.mac,
+            name,
+            status,
+            ap.last_seen,
+            ap.uptime,
+            ap.model,
+            ap.hw_rev,
+            ap.serial,
+            ap.ip,
+            ap.ext_ip,
+            ap.num_clients,
+            ap.lldp_stat.system_name,
+            ap.lldp_stat.system_desc,
+            ap.lldp_stat.port_id,
+            ap.lldp_stat.port_desc,
+            ap.lldp_stat.chassis_id,
+            lldp_med,
+            ap.lldp_stat.power_requested,
+            ap.lldp_stat.power_allocated,
+            ap.lldp_stat.power_draw
+        ]);
+    }
 }
 
 

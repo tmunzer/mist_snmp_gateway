@@ -447,14 +447,14 @@ apStatus  OBJECT-TYPE
     ::= { apStatsEntry 3 }
 
 apLastSeen OBJECT-TYPE
-    SYNTAX    Integer32 (1..2147483647)
+    SYNTAX    Integer32 (0..2147483647)
     MAX-ACCESS read-only
     STATUS current
     DESCRIPTION "The last time the Access Point contacted the Mist Cloud"
     ::= { apStatsEntry 4 }
 
 apUptime OBJECT-TYPE
-    SYNTAX    Integer32 (1..2147483647)
+    SYNTAX    Integer32 (0..2147483647)
     MAX-ACCESS read-only
     STATUS    current
     DESCRIPTION "The Access Point Uptime"

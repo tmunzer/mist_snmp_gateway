@@ -8,7 +8,7 @@
     "dependencies": {
         "bluebird": "^3.7.2",
         "dotenv": "^16.0.0",
-        "mongoose": "^6.3.0",
+        "mongoose": "^6.4.6",
         "net-snmp": "^3.6.2",
         "node-cron": "^3.0.0",
         "winston": "^3.7.2"

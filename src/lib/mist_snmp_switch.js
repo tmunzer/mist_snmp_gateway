@@ -49,7 +49,7 @@ function add_switch_stats(mib, sw) {
         if (member.fans) {
             for (var i in member.fans) {
                 if (member.fans[i] == "ok") fans[i] = 3
-                else fan[i] = 2
+                else fans[i] = 2
             }
         }
 

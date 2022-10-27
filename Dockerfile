@@ -1,4 +1,4 @@
-FROM node:16.18.0-alpine3.16
+FROM node:lts-alpine3.16
 
 LABEL maintainer="tmunzer@juniper.net"
 LABEL one.stag.mwtt.version="1.1.0"
@@ -9,6 +9,7 @@ RUN npm install
 COPY ./src /app/
 WORKDIR /app
 
+
 EXPOSE 161/udp
-ENTRYPOINT npm start
+CMD [ "npm","start" ]
 

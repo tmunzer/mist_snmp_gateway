@@ -13,7 +13,7 @@
         "fast-xml-parser": "^4.0.12",
         "ieee754": "^1.2.1",
         "is-stream": "^2.0.1",
-        "mongoose": "^6.7.1",
+        "mongoose": "^6.8.0",
         "net-snmp": "^3.9.0",
         "node-cron": "^3.0.0",
         "safe-buffer": "^5.2.1",

@@ -1,4 +1,4 @@
-FROM node:19.6.0-alpine3.16
+FROM node:19.6-alpine3.16
 
 LABEL maintainer="tmunzer@juniper.net"
 LABEL one.stag.mwtt.version="1.1.0"

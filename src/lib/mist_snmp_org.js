@@ -23,27 +23,27 @@ function update_org(mib, org) {
 
     mib.setScalarValue('sleCoverageTotal', org.stats.sle.coverage.total)
     mib.setScalarValue('sleCoverageOk', org.stats.sle.coverage.ok)
-    mib.setScalarValue('sleCoveragePercent', percent.coverage)
+    mib.setScalarValue('sleCoveragePercent', parseInt(percent.coverage))
 
     mib.setScalarValue('sleFailedToConnectTotal', org.stats.sle.failed_to_connect.total)
     mib.setScalarValue('sleFailedToConnectOk', org.stats.sle.failed_to_connect.ok)
-    mib.setScalarValue('sleFailedToConnectPercent', percent.failed_to_connect)
+    mib.setScalarValue('sleFailedToConnectPercent', parseInt(percent.failed_to_connect))
 
     mib.setScalarValue('sleRoamingTotal', org.stats.sle.roaming.total)
     mib.setScalarValue('sleRoamingOk', org.stats.sle.roaming.ok)
-    mib.setScalarValue('sleRoamingPercent', percent.roaming)
+    mib.setScalarValue('sleRoamingPercent', parseInt(percent.roaming))
 
     mib.setScalarValue('sleTimeToConnectTotal', org.stats.sle.time_to_connect.total)
     mib.setScalarValue('sleTimeToConnectOk', org.stats.sle.time_to_connect.ok)
-    mib.setScalarValue('sleTimeToConnectPercent', percent.time_to_connect)
+    mib.setScalarValue('sleTimeToConnectPercent', parseInt(percent.time_to_connect))
 
     mib.setScalarValue('sleThroughputTotal', org.stats.sle.throughput.total)
     mib.setScalarValue('sleThroughputOk', org.stats.sle.throughput.ok)
-    mib.setScalarValue('sleThroughputPercent', percent.throughput)
+    mib.setScalarValue('sleThroughputPercent', parseInt(percent.throughput))
 
     mib.setScalarValue('sleCapacityTotal', org.stats.sle.capacity.total)
     mib.setScalarValue('sleCapacityOk', org.stats.sle.capacity.ok)
-    mib.setScalarValue('sleCapacityPercent', percent.capacity)
+    mib.setScalarValue('sleCapacityPercent', parseInt(percent.capacity))
 
 }
 

@@ -69,14 +69,15 @@ MONGO
 // retrieve mongodb parameters from config file
 const db = mongoose.connection;
 
-db.on('error', function() { logger.error('Unable to connect to mongoDB on ' + global.CONFIG.MONGO_HOST + ' server') });
-db.once('open', function() {
+db.on('error', function () { logger.error('Unable to connect to mongoDB on ' + global.CONFIG.MONGO_HOST + ' server') });
+db.once('open', function () {
     logger.info("Connected to mongoDB on " + global.CONFIG.MONGO_HOST + " server");
 });
 
 // connect to mongodb
 var mongo_host = global.CONFIG.MONGO_HOST;
 if (global.CONFIG.MONGO_USER && global.CONFIG.MONGO_PASSWORD) mongo_host = global.CONFIG.MONGO_USER + ":" + encodeURI(global.CONFIG.MONGO_PASSWORD) + "@" + mongo_host
+mongoose.set('strictQuery', true);
 mongoose.connect('mongodb://' + mongo_host + '/' + global.CONFIG.MONGO_DB + "?authSource=admin", { useNewUrlParser: true, useUnifiedTopology: true });
 
 /*================================================================

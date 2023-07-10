@@ -1,4 +1,4 @@
-FROM node:current-alpine3.16
+FROM node:20.3.1-bookworm-slim
 
 LABEL maintainer="tmunzer@juniper.net"
 LABEL one.stag.mwtt.version="1.1.0"

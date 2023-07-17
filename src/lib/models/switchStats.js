@@ -38,7 +38,6 @@ const SwitchStatsSchema = new mongoose.Schema({
     uptime: Number,
     serial: String,
     dhcpd_stat: {},
-    if_stat: { String: {} },
     config_version: Number,
     _ttl: Number,
     vc_setup_info: {
@@ -96,6 +95,7 @@ const SwitchStatsSchema = new mongoose.Schema({
         gateway: String,
         dns: [String]
     },
+    if_stat: { type: Object },
     x: Number,
     y: Number,
     x_m: Number,
@@ -110,7 +110,7 @@ const SwitchStatsSchema = new mongoose.Schema({
     image1_url: String
 });
 
-SwitchStatsSchema.pre("save", function(next) {
+SwitchStatsSchema.pre("save", function (next) {
     if (this.module_stat) this.module_stat.forEach(member => {
         if (member.type) {
             member._type = member.type;

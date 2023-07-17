@@ -3,12 +3,12 @@ const logger = require("./logger");
 
 function add_switch(mib, sw) {
     add_switch_stats(mib, sw);
-    //add_switch_eth(mib, sw);
+    add_switch_eth(mib, sw);
 }
 
 function remove_switch(mib, sw) {
     remove_switch_stats(mib, sw);
-    //remove_switch_eth(mib, sw);
+    remove_switch_eth(mib, sw);
 }
 
 
@@ -28,14 +28,14 @@ function add_switch_stats(mib, sw) {
     if (sw.name) name = sw.name;
     if (sw.last_seen) last_seen = sw.last_seen;
     if (sw.ip) ip = sw.ip;
-    
+
     sw.module_stat.forEach(member => {
 
-        var serial = sw.serial;        
-        var model = sw.model;        
-        var mac = sw.mac;        
-        var uptime = 0;        
-        var version = "N/A";        
+        var serial = sw.serial;
+        var model = sw.model;
+        var mac = sw.mac;
+        var uptime = 0;
+        var version = "N/A";
         var vc_role = 1
         var poe = { max_power: 0, power_draw: 0 };
         var fans = [1, 1];
@@ -44,7 +44,7 @@ function add_switch_stats(mib, sw) {
         var cpu_stat = [-1, -1, -1];
         var memory_stat = -1;
         var fpc_idx = 0;
-        
+
 
         if (member.serial) serial = member.serial;
         if (member.model) model = member.model;
@@ -93,7 +93,38 @@ function add_switch_stats(mib, sw) {
                 else psus[i] = 1;
             }
         }
+        logger.debug(
+            'switchStatsEntry',
+            sw.site_id,
+            sw.mac,
+            fpc_idx,
 
+            name,
+            status,
+            last_seen,
+            ip,
+
+            mac,
+            serial,
+            vc_role,
+            model,
+            uptime,
+            version,
+            String(poe.max_power),
+            String(poe.power_draw),
+            fans[0],
+            fans[1],
+            temperatures.cpu.celsius,
+            temperatures.cpu.status,
+            temperatures.psu.celsius,
+            temperatures.psu.status,
+            psus[0],
+            psus[1],
+            String(cpu_stat[0]),
+            String(cpu_stat[1]),
+            String(cpu_stat[2]),
+            memory_stat
+        );
         mib.addTableRow('switchStatsEntry', [
             sw.site_id,
             sw.mac,
@@ -144,43 +175,40 @@ function remove_switch_stats(mib, sw) {
 }
 
 
-// function add_switch_eth(mib, sw) {
-//     for (const [key, value] of Object.entries(ap.port_stat)) {
-//         var status = 1;
-//         if (value.up) status = 2;
-//         var speed = 1;
-//         switch (value.speed) {
-//             case 10:
-//                 speed = 2;
-//                 break;
-//             case 100:
-//                 speed = 3;
-//                 break;
-//             case 1000:
-//                 speed = 4;
-//                 break;
-//             case 2500:
-//                 speed = 5;
-//                 break;
-//             case 5000:
-//                 speed = 6;
-//                 break;
-//         }
-//         var duplex = 1;
-//         if (value.full_duplex) duplex = 2;
-//         mib.addTableRow('apEthEntry', [ap.site_id, ap.mac, key, status, speed, duplex]);
-//     }
-// }
+function add_switch_eth(mib, sw) {
+    if (sw.if_stat)
+        for (const [key, value] of Object.entries(sw.if_stat)) {
+            if (value) {
+                var status = 1;
+                var tx_bytes = "0";
+                var rx_bytes = "0";
+                var tx_pkts = "0";
+                var rx_pkts = "0";
+                var rx_errors = "0";
+                if (value.up) status = 2;
+                if (value.tx_bytes) tx_bytes = value.tx_bytes.toString();
+                if (value.rx_bytes) rx_bytes = value.rx_bytes.toString();
+                if (value.tx_pkts) tx_pkts = value.tx_pkts.toString();
+                if (value.rx_pkts) rx_pkts = value.rx_pkts.toString();
+                if (value.rx_errors) rx_errors = value.rx_errors.toString();
+                logger.debug('switchEthEntry', sw.site_id, sw.mac, key, status, tx_bytes, rx_bytes, tx_pkts, rx_pkts, rx_errors)
+                mib.addTableRow('switchEthEntry', [sw.site_id, sw.mac, key, status, tx_bytes, rx_bytes, tx_pkts, rx_pkts, rx_errors]);
+            }
+        }
+}
 
-// function remove_switch_eth(mib, sw) {
-//     for (const [key, value] of Object.entries(ap.port_stat)) {
-//         try {
-//             mib.deleteTableRow('apEthEntry', [ap.site_id, ap.mac, key]);
-//         } catch (error) {
-//             logger.warning("Unable to delete ap interface " + ap.site_id + "." + ap.mac + "." + key + " from MIB")
-//         }
-//     }
-// }
+function remove_switch_eth(mib, sw) {
+    if (sw.if_stat)
+        for (const [key, value] of Object.entries(sw.if_stat)) {
+            if (value) {
+                try {
+                    mib.deleteTableRow('switchEthEntry', [sw.site_id, sw.mac, key]);
+                } catch (error) {
+                    logger.warning("Unable to delete switch interface " + sw.site_id + "." + sw.mac + "." + key + " from MIB: " + error)
+                }
+            }
+        }
+}
 
 
 module.exports.add = add_switch;

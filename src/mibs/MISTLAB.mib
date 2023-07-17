@@ -949,5 +949,81 @@ switchMemoryUsage  OBJECT-TYPE
         "Switch Memory usage (%)"
     ::= { switchStatsEntry 26 }
 
+--**********************************************************************
+-- SWITCH ETH STRUCTURE
+--**********************************************************************
+
+switchEthTable    OBJECT-TYPE
+    SYNTAX SEQUENCE OF SwitchEthEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        juniper switches interfaces table"
+    ::= { switch 2 }
+
+switchEthEntry    OBJECT-TYPE
+    SYNTAX    SwitchEthEntry
+    MAX-ACCESS not-accessible
+    STATUS    current
+    DESCRIPTION
+        "This is the data structure associated to
+        juniper switches interfaces entry"
+    INDEX  { siteId,switchFpc0Mac,switchEthPort }
+    ::= { switchEthTable 1 }
+
+SwitchEthEntry   ::= SEQUENCE {
+    switchEthPort           OCTET STRING,
+    switchEthStatus         INTEGER,
+    switchEthTxBytes        OCTET STRING,
+    switchEthRxBytes        OCTET STRING,
+    switchEthTxPkts         OCTET STRING,
+    switchEthRxPkts         OCTET STRING
+}
+
+switchEthPort  OBJECT-TYPE
+    SYNTAX  OCTET STRING (SIZE(1..10))
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Interface Name"
+    ::= { switchEthEntry 1 }
+
+switchEthStatus  OBJECT-TYPE
+    SYNTAX    INTEGER {
+        down (1),
+        up (2)
+    }
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Inteface Status"
+    ::= { switchEthEntry 2 }
+
+switchEthTxBytes  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Interface Tx Bytes"
+    ::= { switchEthEntry 3 }
+
+switchEthRxBytes  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Interface Rx Bytes"
+    ::= { switchEthEntry 4 }
+
+switchEthTxPkts  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Interface Tx Packets"
+    ::= { switchEthEntry 5 }
+
+switchEthRxPkts  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "Switch Interface Rx Packets"
+    ::= { switchEthEntry 6 }
 
 END

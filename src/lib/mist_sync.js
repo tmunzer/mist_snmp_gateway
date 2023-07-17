@@ -16,8 +16,8 @@ async function syncSiteDevices(host, token, site, agent) {
 }
 
 
-function siteStats(host, token, site_id, cb) {
-    Sites.stats(host, token, site_id, (err, data) => {
+function siteStats(host, token, site, cb) {
+    Sites.stats(host, token, site.id, (err, data) => {
         if (err) logger.error(err)
         else {
             const stats = {
@@ -35,20 +35,19 @@ function siteStats(host, token, site_id, cb) {
                 num_clients: data.num_clients,
                 num_devices_connected: data.num_devices_connected
             }
-            cb(stats);
+            cb(site, stats);
         }
     })
 }
 
-async function _sync_sites(host, token, agent, sites_from_mist, site_ids, ids_to_do) {
+async function _sync_sites(host, token, agent, sites_from_mist, filtered_site_ids, ids_to_do, index) {
     const timer = ms => new Promise(res => setTimeout(res, ms))
     const delay = 100;
-    for (var index in sites_from_mist) {
-        await timer(delay);
-        var site = sites_from_mist[index];
-        if (site_ids.length == 0 || site_ids.includes(site.id)) {
+    for (var site_num in sites_from_mist) {
+        var site = sites_from_mist[site_num];
+        if (filtered_site_ids.length == 0 || filtered_site_ids.includes(site.id)) {
             if (ids_to_do.ids_to_add.includes(site.id)) {
-                siteStats(host, token, site.id, (stats) => {
+                siteStats(host, token, site, (site, stats) => {
                     index += 1;
                     stats.index = index;
                     stats.last_updated = Date.now();
@@ -56,27 +55,28 @@ async function _sync_sites(host, token, agent, sites_from_mist, site_ids, ids_to
                         if (err) logger.error(err);
                         else {
                             agent.add_site(stats);
-                            syncSiteDevices(host, token, site, agent)
+                            syncSiteDevices(host, token, site, agent);
                         }
                     })
                 })
             } else if (ids_to_do.ids_to_update.includes(site.id)) {
-                siteStats(host, token, site.id, (stats) => {
+                siteStats(host, token, site, (site, stats) => {
                     stats.last_updated = Date.now();
                     SiteModel.findOneAndUpdate({ id: site.id }, stats, (err, res) => {
                         if (err) logger.error(err);
                         else {
                             agent.update_site(stats);
-                            syncSiteDevices(host, token, site, agent)
+                            syncSiteDevices(host, token, site, agent);
                         }
                     })
                 })
             }
         };
+        await timer(delay);
     }
 }
 
-function processSites(host, token, sites_from_mist, site_ids, agent) {
+function processSites(host, token, sites_from_mist, filtered_site_ids, agent) {
     SiteModel.find({})
         .sort({ index: -1 })
         .exec((err, sites_from_db) => {
@@ -85,7 +85,7 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
             if (sites_from_db.length > 0) index = sites_from_db[0].index;
             const ids_to_do = processIds(sites_from_db, sites_from_mist)
             if (ids_to_do.ids_to_add.length > 0 || ids_to_do.ids_to_update.length > 0) {
-                _sync_sites(host, token, agent, sites_from_mist, site_ids, ids_to_do)
+                _sync_sites(host, token, agent, sites_from_mist, filtered_site_ids, ids_to_do, index)
             }
             if (ids_to_do.ids_to_delete.length > 0)
                 sites_from_db.forEach(site => {
@@ -150,15 +150,12 @@ function processOrg(host, token, org_id, agent) {
     })
 }
 
-const sync = async function (host, token, org_id, site_ids, agent) {
+const sync = async function (host, token, org_id, filtered_site_ids, agent) {
     processOrg(host, token, org_id, agent)
     Orgs.sites(host, token, org_id, (err, sites) => {
         if (err) logger.error(err)
         else if (sites && sites.length > 0) {
-            setTimeout(() => {
-                processSites(host, token, sites, site_ids, agent)
-            },
-                1000);
+            processSites(host, token, sites, filtered_site_ids, agent);
         }
     })
 }

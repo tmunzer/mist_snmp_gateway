@@ -19,7 +19,6 @@ function saveDevicesStats(site, devices_from_mist, device_type, model, agent) {
                         index += 1;
                         device.index = index;
                         device.last_updated = Date.now();
-                        device._id = device.mac;
                         model(device).save((err, res) => {
                             if (err) logger.error(err);
                             else agent.router(device_type, "add", res)

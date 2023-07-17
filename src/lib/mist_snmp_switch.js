@@ -71,10 +71,15 @@ function add_switch_stats(mib, sw) {
                 else psus[i] = 1;
             }
         }
+
+        //vJunos may not have member.fpc_idx, adding a default value
+        var fpc_idx = 0
+        if (member.fpc_idx) fpc_idx = member.fpc_idx
+
         mib.addTableRow('switchStatsEntry', [
             sw.site_id,
             sw.mac,
-            member.fpc_idx,
+            fpc_idx,
 
             name,
             status,
@@ -106,13 +111,16 @@ function add_switch_stats(mib, sw) {
 }
 
 
-function remove_switch_stats(mib, sw) {
+function remove_switch_stats(mib, sw) {        
     sw.module_stat.forEach(member => {
+        //vJunos may not have member.fpc_idx, adding a default value
+        var fpc_idx = 0
+        if (member.fpc_idx) fpc_idx = member.fpc_idx
 
         try {
-            mib.deleteTableRow('switchStatsEntry', [sw.site_id, sw.mac, member.fpc_idx]);
+            mib.deleteTableRow('switchStatsEntry', [sw.site_id, sw.mac, fpc_idx]);
         } catch (error) {
-            logger.warning("Unable to delete switch index " + sw.site_id + "." + sw.mac + "." + member.fpc_idx + " from MIB")
+            logger.warning("Unable to delete switch index " + sw.site_id + "." + sw.mac + "." + fpc_idx + " from MIB")
         }
     })
 }

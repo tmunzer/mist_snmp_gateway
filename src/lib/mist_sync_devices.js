@@ -46,11 +46,11 @@ function saveDevicesStats(site, devices_from_mist, device_type, model, agent) {
 module.exports.devices = function (host, token, site, agent) {
     Devices.stats(host, token, site.id, "all", (err, devices) => {
         if (err) logger.error(err);
-        if (devices.length > 0) {
+        if (Array.isArray(devices) && devices.length > 0) {
             const aps = devices.filter((device) => { return device.type == "ap" })
             const switches = devices.filter((device) => { return device.type == "switch" })
-            if (aps.length > 0) saveDevicesStats(site, devices, "ap", ApStatModel, agent)
-            if (switches.length > 0) saveDevicesStats(site, devices, "switch", SwitchStatModel, agent)
+            if (aps.length > 0) saveDevicesStats(site, aps, "ap", ApStatModel, agent)
+            if (switches.length > 0) saveDevicesStats(site, switches, "switch", SwitchStatModel, agent)
         }
     })
 }

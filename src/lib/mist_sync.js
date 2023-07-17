@@ -9,8 +9,9 @@ const SyncDevices = require("./mist_sync_devices");
 
 
 function syncSiteDevices(host, token, site, agent) {
-    SyncDevices.ap(host, token, site, agent);
-    SyncDevices.switch(host, token, site, agent);
+    // SyncDevices.ap(host, token, site, agent);
+    // 
+    SyncDevices.devices(host, token, site, agent);
 }
 
 
@@ -59,7 +60,9 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                                     if (err) logger.error(err);
                                     else {
                                         agent.add_site(stats);
+                                        setTimeout(()=>{
                                         syncSiteDevices(host, token, site, agent)
+                                        },200)
                                     }
                                 })
                             })
@@ -70,7 +73,9 @@ function processSites(host, token, sites_from_mist, site_ids, agent) {
                                     if (err) logger.error(err);
                                     else {
                                         agent.update_site(stats);
-                                        syncSiteDevices(host, token, site, agent)
+                                        setTimeout(()=>{
+                                            syncSiteDevices(host, token, site, agent)
+                                        }, 200)
                                     }
                                 })
                             })
@@ -140,12 +145,15 @@ function processOrg(host, token, org_id, agent) {
     })
 }
 
-const sync = async function(host, token, org_id, site_ids, agent) {
+const sync = async function (host, token, org_id, site_ids, agent) {
     processOrg(host, token, org_id, agent)
     Orgs.sites(host, token, org_id, (err, sites) => {
         if (err) logger.error(err)
         else if (sites && sites.length > 0) {
-            processSites(host, token, sites, site_ids, agent);
+            setTimeout(() => {
+                processSites(host, token, sites, site_ids, agent)
+            },
+                150);
         }
     })
 }

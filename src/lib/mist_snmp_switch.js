@@ -20,14 +20,42 @@ function update_switch(mib, sw) {
 
 function add_switch_stats(mib, sw) {
     var status = 1;
-    if (sw.status == "connected") status = 2;
-
     var name = sw.mac;
-    if (sw.name) name = sw.name;
+    var last_seen = 0;
+    var ip = "0.0.0.0"
 
+    if (sw.status == "connected") status = 2;
+    if (sw.name) name = sw.name;
+    if (sw.last_seen) last_seen = sw.last_seen;
+    if (sw.ip) ip = sw.ip;
+    
     sw.module_stat.forEach(member => {
+
+        var serial = sw.serial;        
+        var model = sw.model;        
+        var mac = sw.mac;        
+        var uptime = 0;        
+        var version = "N/A";        
         var vc_role = 1
-        switch (member.vcv_role) {
+        var poe = { max_power: 0, power_draw: 0 };
+        var fans = [1, 1];
+        var temperatures = { cpu: { celsius: 0, status: 1 }, psu: { celsius: 0, status: 1 } };
+        var psus = [1, 1];
+        var cpu_stat = [-1, -1, -1];
+        var memory_stat = -1;
+        var fpc_idx = 0;
+        
+
+        if (member.serial) serial = member.serial;
+        if (member.model) model = member.model;
+        if (member.mac) serial = member.mac;
+        if (member.uptime) uptime = member.uptime;
+        if (member.poe) { poe = member.poe; }
+        if (member.cpu_stat && member.cpu_stat.load_avg) cpu_stat = member.cpu_stat.load_avg
+        if (member.memory_stat && member.memory_stat.usage) memory_stat = member.memory_stat.usage
+        if (member.fpc_idx) fpc_idx = member.fpc_idx
+
+        switch (member.vc_role) {
             case "master":
                 vc_role = 2;
                 break;
@@ -42,10 +70,6 @@ function add_switch_stats(mib, sw) {
                 break;
         }
 
-        var poe = { max_power: 0, power_draw: 0 };
-        if (member.poe) { poe = member.poe; }
-
-        var fans = [1, 1];
         if (member.fans) {
             for (var i in member.fans) {
                 if (member.fans[i] == "ok") fans[i] = 3
@@ -53,7 +77,6 @@ function add_switch_stats(mib, sw) {
             }
         }
 
-        var temperatures = { cpu: { celsius: 0, status: 1 }, psu: { celsius: 0, status: 1 } }
         if (member.temperatures) {
             member.temperatures.forEach(temp => {
                 var status = 1;
@@ -64,17 +87,12 @@ function add_switch_stats(mib, sw) {
             })
         }
 
-        var psus = [1, 1]
         if (member.psus) {
             for (var i in member.psus) {
                 if (member.psus[i].status == "ok") psus[i] = 3;
                 else psus[i] = 1;
             }
         }
-
-        //vJunos may not have member.fpc_idx, adding a default value
-        var fpc_idx = 0
-        if (member.fpc_idx) fpc_idx = member.fpc_idx
 
         mib.addTableRow('switchStatsEntry', [
             sw.site_id,
@@ -83,15 +101,15 @@ function add_switch_stats(mib, sw) {
 
             name,
             status,
-            sw.last_seen,
-            sw.ip,
+            last_seen,
+            ip,
 
-            member.mac,
-            member.serial,
+            mac,
+            serial,
             vc_role,
-            member.model,
-            member.uptime,
-            member.version,
+            model,
+            uptime,
+            version,
             String(poe.max_power),
             String(poe.power_draw),
             fans[0],
@@ -102,16 +120,16 @@ function add_switch_stats(mib, sw) {
             temperatures.psu.status,
             psus[0],
             psus[1],
-            String(member.cpu_stat.load_avg[0]),
-            String(member.cpu_stat.load_avg[1]),
-            String(member.cpu_stat.load_avg[2]),
-            member.memory_stat.usage
+            String(cpu_stat[0]),
+            String(cpu_stat[1]),
+            String(cpu_stat[2]),
+            memory_stat
         ]);
     });
 }
 
 
-function remove_switch_stats(mib, sw) {        
+function remove_switch_stats(mib, sw) {
     sw.module_stat.forEach(member => {
         //vJunos may not have member.fpc_idx, adding a default value
         var fpc_idx = 0
@@ -120,7 +138,7 @@ function remove_switch_stats(mib, sw) {
         try {
             mib.deleteTableRow('switchStatsEntry', [sw.site_id, sw.mac, fpc_idx]);
         } catch (error) {
-            logger.warning("Unable to delete switch index " + sw.site_id + "." + sw.mac + "." + fpc_idx + " from MIB")
+            logger.warning("Unable to delete switch index " + sw.site_id + "." + sw.mac + "." + fpc_idx + " from MIB: " + error)
         }
     })
 }

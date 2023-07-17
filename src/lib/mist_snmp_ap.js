@@ -40,6 +40,30 @@ function add_ap_stats(mib, ap) {
     if (ap.name) name = ap.name;
     var lldp_med = 1;
     if (ap.lldp_stat.lldp_med_supported) lldp_med = 2;
+    logger.debug(
+        'apStatsEntry',
+        ap.site_id,
+        ap.mac,
+        name,
+        status,
+        ap.last_seen,
+        ap.uptime,
+        ap.model,
+        ap.hw_rev,
+        ap.serial,
+        ap.ip,
+        ap.ext_ip,
+        ap.num_clients,
+        ap.lldp_stat.system_name,
+        ap.lldp_stat.system_desc,
+        ap.lldp_stat.port_id,
+        ap.lldp_stat.port_desc,
+        ap.lldp_stat.chassis_id,
+        lldp_med,
+        ap.lldp_stat.power_requested,
+        ap.lldp_stat.power_allocated,
+        ap.lldp_stat.power_draw
+        );
     mib.addTableRow('apStatsEntry', [
         ap.site_id,
         ap.mac,
@@ -109,6 +133,7 @@ function add_ap_eth(mib, ap) {
         if (value.tx_pkts) tx_pkts = value.tx_pkts.toString();
         if (value.rx_pkts) rx_pkts = value.rx_pkts.toString();
         if (value.rx_errors) rx_errors = value.rx_errors.toString();
+        logger.debug('apEthEntry', ap.site_id, ap.mac, key, status, speed, duplex, tx_bytes, rx_bytes, tx_pkts, rx_pkts, rx_errors)
         mib.addTableRow('apEthEntry', [ap.site_id, ap.mac, key, status, speed, duplex, tx_bytes, rx_bytes, tx_pkts, rx_pkts, rx_errors]);
     }
 }

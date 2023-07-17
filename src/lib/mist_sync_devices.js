@@ -18,7 +18,7 @@ function saveDevicesStats(site, devices_from_mist, device_type, model, agent) {
                     if (ids_to_do.ids_to_add.includes(device.id)) {
                         index += 1;
                         device.index = index;
-                        device.last_updated = Date.now()
+                        device.last_updated = Date.now();
                         model(device).save((err, res) => {
                             if (err) logger.error(err);
                             else agent.router(device_type, "add", res)
@@ -27,7 +27,7 @@ function saveDevicesStats(site, devices_from_mist, device_type, model, agent) {
                         device.last_updated = Date.now()
                         model.findOneAndUpdate({ site_id: device.site_id, id: device.id }, device, (err, res) => {
                             if (err) logger.error(err);
-                            else agent.router(device_type, "update", res)
+                            else agent.router(device_type, "update", res);
                         })
                     }
                 })
@@ -36,23 +36,21 @@ function saveDevicesStats(site, devices_from_mist, device_type, model, agent) {
                     if (ids_to_do.ids_to_delete.includes(device.id)) {
                         model.findOneAndDelete({ site_id: device.site_id, id: device.id }, device, (err, res) => {
                             if (err) logger.error(err);
-                            else agent.router(device_type, "remove", device)
+                            else agent.router(device_type, "remove", device);
                         })
                     }
                 })
         })
 }
 
-module.exports.ap = function(host, token, site, agent) {
-    Devices.stats(host, token, site.id, "ap", (err, devices) => {
+module.exports.devices = function (host, token, site, agent) {
+    Devices.stats(host, token, site.id, "all", (err, devices) => {
         if (err) logger.error(err);
-        saveDevicesStats(site, devices, "ap", ApStatModel, agent)
-    })
-}
-
-module.exports.switch = function(host, token, site, agent) {
-    Devices.stats(host, token, site.id, "switch", (err, devices) => {
-        if (err) logger.error(err);
-        saveDevicesStats(site, devices, "switch", SwitchStatModel, agent)
+        if (devices.length > 0) {
+            const aps = devices.filter((device) => { return device.type == "ap" })
+            const switches = devices.filter((device) => { return device.type == "switch" })
+            if (aps.length > 0) saveDevicesStats(site, devices, "ap", ApStatModel, agent)
+            if (switches.length > 0) saveDevicesStats(site, devices, "switch", SwitchStatModel, agent)
+        }
     })
 }

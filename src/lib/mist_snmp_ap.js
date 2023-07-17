@@ -78,8 +78,14 @@ function remove_ap_stats(mib, ap) {
 function add_ap_eth(mib, ap) {
     for (const [key, value] of Object.entries(ap.port_stat)) {
         var status = 1;
-        if (value.up) status = 2;
         var speed = 1;
+        var duplex = 1;
+        var tx_bytes = "0";
+        var rx_bytes = "0";
+        var tx_pkts = "0";
+        var rx_pkts = "0";
+        var rx_errors = "0";
+        if (value.up) status = 2;
         switch (value.speed) {
             case 10:
                 speed = 2;
@@ -97,9 +103,13 @@ function add_ap_eth(mib, ap) {
                 speed = 6;
                 break;
         }
-        var duplex = 1;
         if (value.full_duplex) duplex = 2;
-        mib.addTableRow('apEthEntry', [ap.site_id, ap.mac, key, status, speed, duplex]);
+        if (value.tx_bytes) tx_bytes = value.tx_bytes.toString();
+        if (value.rx_bytes) rx_bytes = value.rx_bytes.toString();
+        if (value.tx_pkts) tx_pkts = value.tx_pkts.toString();
+        if (value.rx_pkts) rx_pkts = value.rx_pkts.toString();
+        if (value.rx_errors) rx_errors = value.rx_errors.toString();
+        mib.addTableRow('apEthEntry', [ap.site_id, ap.mac, key, status, speed, duplex, tx_bytes, rx_bytes, tx_pkts, rx_pkts, rx_errors]);
     }
 }
 

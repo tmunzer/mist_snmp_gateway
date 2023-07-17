@@ -598,7 +598,12 @@ ApEthEntry   ::= SEQUENCE {
     apEthPort           OCTET STRING,
     apEthStatus         INTEGER,
     apEthSpeed          Integer32,
-    apEthDuplex         INTEGER
+    apEthDuplex         INTEGER,
+    apEthTxBytes        OCTET STRING,
+    apEthRxBytes        OCTET STRING,
+    apEthTxPkts         OCTET STRING,
+    apEthRxPkts         OCTET STRING,
+    apEthRxErrors       OCTET STRING,
 }
 
 apEthPort  OBJECT-TYPE
@@ -635,6 +640,40 @@ apEthDuplex OBJECT-TYPE
     DESCRIPTION "AP Interface Duplex"
     ::= { apEthEntry 4 }
 
+apEthTxBytes  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "AP Interface Tx Bytes"
+    ::= { apEthEntry 5 }
+
+apEthRxBytes  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "AP Interface Rx Bytes"
+    ::= { apEthEntry 6 }
+
+apEthTxPkts  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "AP Interface Tx Packets"
+    ::= { apEthEntry 7 }
+
+apEthRxPkts  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "AP Interface Rx Packets"
+    ::= { apEthEntry 8 }
+
+apEthRxErrors  OBJECT-TYPE
+    SYNTAX    OCTET STRING (SIZE(1..14)) 
+    MAX-ACCESS read-only
+    STATUS    current
+    DESCRIPTION "AP Interface Rx Errors"
+    ::= { apEthEntry 9 }
 
 --**********************************************************************
 -- SWITCH STRUCTURE

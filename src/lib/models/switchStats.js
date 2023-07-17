@@ -83,7 +83,6 @@ const SwitchStatsSchema = new mongoose.Schema({
         model: String,
         pics: [{ port_groups: [{ count: Number, _type: String }], index: Number }]
     }],
-    _id: String,
     ip: String,
     last_seen: Number,
     status: String,

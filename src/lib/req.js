@@ -125,7 +125,7 @@ module.exports.httpRequest = function(options, callback, body) {
     const req = https.request(options, function(res) {
         result.result.status = res.statusCode;
         logger.info('REQUEST QUERY: ' + options.method + " " + options.path);
-        logger.debug('REQUEST STATUS: ' + result.result.status);
+        logger.info('REQUEST STATUS: ' + result.result.status);
         result.result.headers = JSON.stringify(res.headers);
         res.setEncoding('utf8');
         let data = '';
@@ -133,8 +133,10 @@ module.exports.httpRequest = function(options, callback, body) {
             data += chunk;
         });
         res.on('end', function() {
+            req.destroy()
             switch (result.result.status) {
                 case 200:
+                    req.destroy()
                     if (data != '') {
                         if (data.length > 400) logger.debug("RESPONSE DATA: " + data.substr(0, 400) + '...');
                         else logger.debug("RESPONSE DATA: " + data);
@@ -146,8 +148,12 @@ module.exports.httpRequest = function(options, callback, body) {
                     callback({ code: 404, error: "Not Found" })
                     break;
                 default:
-                    var dataJSON = JSON.parse(data);
-                    if ("detail" in dataJSON) dataJSON = dataJSON.detail
+                    try{
+                        var dataJSON = JSON.parse(data);
+                        if ("detail" in dataJSON) dataJSON = dataJSON.detail
+                    } catch {
+                        logger.error("Unable to Parse JSON response: " + data);
+                    }
                     logger.error("RESPONSE ERROR: " + data);
                     callback({ code: result.result.status, error: dataJSON });
                     break;
@@ -160,6 +166,7 @@ module.exports.httpRequest = function(options, callback, body) {
         logger.error("REQUEST ERROR: " + JSON.stringify(err));
         callback(err, null);
     });
+    
 
 
     // write data to request body

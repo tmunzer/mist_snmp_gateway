@@ -8,9 +8,10 @@ const SyncDevices = require("./mist_sync_devices");
 
 
 
-function syncSiteDevices(host, token, site, agent) {
-    // SyncDevices.ap(host, token, site, agent);
-    // 
+async function syncSiteDevices(host, token, site, agent) {
+    const timer = ms => new Promise(res => setTimeout(res, ms))
+    const delay = 150;
+    await timer(delay);
     SyncDevices.devices(host, token, site, agent);
 }
 
@@ -41,9 +42,9 @@ function siteStats(host, token, site_id, cb) {
 
 async function _sync_sites(host, token, agent, sites_from_mist, site_ids, ids_to_do) {
     const timer = ms => new Promise(res => setTimeout(res, ms))
-    const delay = 150;
-    //sites_from_mist.forEach(site => {
+    const delay = 100;
     for (var index in sites_from_mist) {
+        await timer(delay);
         var site = sites_from_mist[index];
         if (site_ids.length == 0 || site_ids.includes(site.id)) {
             if (ids_to_do.ids_to_add.includes(site.id)) {
@@ -72,7 +73,6 @@ async function _sync_sites(host, token, agent, sites_from_mist, site_ids, ids_to
                 })
             }
         };
-        await timer(delay);
     }
 }
 

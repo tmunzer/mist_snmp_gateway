@@ -17,6 +17,6 @@
         "net-snmp": "^3.9.6",
         "node-cron": "^3.0.0",
         "safe-buffer": "^5.2.1",
-        "winston": "^3.7.2"
+        "winston": "^3.10.0"
     }
 }

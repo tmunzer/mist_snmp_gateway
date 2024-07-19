@@ -9,14 +9,13 @@
         "base64-js": "^1.5.1",
         "bluebird": "^3.7.2",
         "buffer": "^5.7.1",
-        "dotenv": "^16.3.1",
-        "fast-xml-parser": "^4.2.7",
+        "dotenv": "^16.4.5",
+        "fast-xml-parser": "^4.3.5",
         "ieee754": "^1.2.1",
         "is-stream": "^2.0.1",
         "mongoose": "^6.12.0",
-        "net-snmp": "^3.9.7",
         "node-cron": "^3.0.3",
         "safe-buffer": "^5.2.1",
-        "winston": "^3.10.0"
+        "winston": "^3.11.0"
     }
 }

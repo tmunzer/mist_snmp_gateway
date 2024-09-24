@@ -10,7 +10,7 @@
         "bluebird": "^3.7.2",
         "buffer": "^5.7.1",
         "dotenv": "^16.4.5",
-        "fast-xml-parser": "^4.4.1",
+        "fast-xml-parser": "^4.5.0",
         "ieee754": "^1.2.1",
         "is-stream": "^2.0.1",
         "net-snmp": "^3.12.0",
